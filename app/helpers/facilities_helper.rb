@@ -1,2 +1,2 @@
-module FacilityHelper
+module FacilitiesHelper
 end
