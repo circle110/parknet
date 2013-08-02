@@ -48,7 +48,7 @@ class StaffRegistrationController < ApplicationController
   end
   
   def lookup_program
-	@programs = ClassSession.includes(:program).where("programs.name = ? OR programs.id = ?", params[:name], params[:program_id]).collect
+	@programs = ClassSession.includes(:program, :class_session_fees).where("programs.name = ? OR programs.id = ?", params[:name], params[:program_id]).collect
 	@class_session_id = params[:class_session_id]
   end
   

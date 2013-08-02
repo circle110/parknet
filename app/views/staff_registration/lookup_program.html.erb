@@ -17,7 +17,13 @@
 		<% available = prog.program.default_maximum_registrants - bookings %>
 		<% available = available < 0 ? 0:available %>
 			<tr class="staff_users">
-				<td><%= link_to("#{prog.program.name} - #{prog.session_display_order}", {:action => 'registration', :id => prog.id, :previous_event => 'program_selected'}, :class => 'action_select') %></td>
+				<td>
+				<% if prog.class_session_fees(:amount) != [] %>
+					<%= link_to("#{prog.program.name} - #{prog.session_display_order}", {:action => 'registration', :id => prog.id, :previous_event => 'program_selected'}, :class => 'action_select') %>
+				<% else %>
+					<%= prog.program.name %> - <%= prog.session_display_order %> <i>(no fees defined)</i>
+				<% end %>
+				</td>
 				<td><%= days_of_week %>
 				<td><%= prog.start_date %></td>
 				<td><%= prog.end_date %></td>
