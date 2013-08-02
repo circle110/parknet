@@ -1,0 +1,37 @@
+<div class="program display">
+<h2><%= @program.name %></h2>
+
+<%= @program.code %><br>
+Ages: <%= @program.min_age %> <%= @program.min_age_type %> - <%= @program.max_age %> <%= @program.max_age_type %><br>
+Minimum Registrants: <%= @program.default_minimum_registrants %>, Maximum Registrants: <%= @program.default_maximum_registrants %><br>
+<%= @program.photo %></br>
+<%= @program.description %><p>
+
+</div>
+<h4>Class Sessions</h4>
+<table summary="Class Sesssions" class=listing">
+	<tr>
+		<th>Class Num.</th>
+		<th>Status</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Start Time</th>
+		<th>End Time</th>
+		<th>Days of Week</th>
+	</tr>
+		<% @program.class_sessions.each do |session| %>
+			<% days_of_week = get_days_of_week(session.id) %>
+			<tr class="class sessions">
+				<td><%= session.session_display_order %></td>
+				<td><%= session.session_status_id %></td>
+				<td><%= session.start_date.strftime("%b. %d %Y") %></td>
+				<td><%= session.end_date.strftime("%b. %d %Y") %></td>
+				<td><%= session.start_time.strftime("%I:%M %p") %></td>
+				<td><%= session.end_time.strftime("%I:%M %p") %></td>
+				<td><%= days_of_week %></td>
+			</tr>
+		<% end %>
+
+</table>
+
+</div>

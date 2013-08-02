@@ -1,0 +1,48 @@
+<%= link_to("<<Back to Season List", {:action => 'list'}, :class => 'back-link') %>
+
+<div class="season new">
+	<h2>Create New Season</h2>
+	<%= form_for @season, url: {action: "create"}, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		
+		<table summary="Season fields">
+			<tr>
+				<th>Season Year</th>
+				<td><%= f.text_field(:season_year) %></td>
+			</tr>			
+			<tr>
+				<th>Season Title</th>
+				<td><%= f.select(:season_title_id, SeasonTitle.all.collect {|s| [s.title, s.id]},{:include_blank => true}) %></td>
+			</tr>			
+			<tr>
+				<th>Default Registration Start Date</th>
+				<td><%= f.date_select(:default_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>			
+			<tr>
+				<th>Default Non-Resident Registration Start Date</th>
+				<td><%= f.date_select(:default_nr_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Default Internet Display Date</th>
+				<td><%= f.date_select(:default_internet_display_date, :order => [:month, :day, :year]) %></td>
+			</tr>		
+			<tr>
+				<th>Member Registration Start Date</th>
+				<td><%= f.date_select(:member_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>			
+			<tr>
+				<th>Registration Start Time</th>
+				<td><%= f.time_select(:registration_start_time, :minute_step => 15, :ampm => true) %></td>
+			</tr>			
+				<th>active</th>
+				<td><%= f.check_box(:active, :checked => true) %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Create New Season" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

@@ -1,0 +1,11 @@
+<div class="program list">
+
+
+</div>
+<h4>Programs Found</h4>
+		<% @programs.each do |program| %>
+				<%= link_to(program.name, {:action => 'show', :id =>  program.id}, :class => 'action_show') %><br>
+				&nbsp;&nbsp;<%= program.description.slice(0..90) %>...<p>
+		<% end %>
+
+</table>

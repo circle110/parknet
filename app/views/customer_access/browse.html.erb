@@ -1,0 +1,34 @@
+
+<h1>Search for Programs</h1>
+
+<%= form_tag '/browse_programs/list', html: {class: "input_form"} do %>
+	<%= hidden_field_tag(:agency_id, :value => session[:agency_id]) %>
+	<%= hidden_field_tag(:user_stamp, :value => session[:staff_user_id]) %>
+
+<h4>Search by keyword</h4>	
+<table summary="Account" class=listing">
+
+	<tr>
+		<td><%= text_field_tag(:text) %></td>
+	</tr>
+	<tr>
+		<td><%= submit_tag "Search for text" %></td>
+	</tr>
+</table>
+<% end %>
+
+<%= form_tag '/browse_programs/list', html: {class: "input_form"} do %>
+	<%= hidden_field_tag(:agency_id, :value => session[:agency_id]) %>
+	<%= hidden_field_tag(:user_stamp, :value => session[:staff_user_id]) %>
+	
+<h4>Search by participant age</h4>	
+<table summary="Account" class=listing">
+
+	<tr>
+		<td><%= date_select("kid", "birthdate", :start_year => 1915, :end_year => Time.now.year, order: [:month, :day, :year]) %></td>
+	</tr>
+	<tr>
+		<td><%= submit_tag "Search by age" %></td>
+	</tr>
+</table>
+<% end %>

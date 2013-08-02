@@ -1,0 +1,35 @@
+<table summary="Class Sesssions" class=listing">
+	<tr>
+		<td colspan="9"><h2>Class Sessions</h2> 
+		<%= link_to("Add Class Session", {:action => 'new', :controller => 'class_sessions', :program_id => @program.id, :agency_id => @program.agency_id}, 
+		:class => 'add-link') %> </td>
+	</tr>
+	<tr>
+		<th>Session Display Order</th>
+		<th>Session Status Id</th>
+		<th>Name</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Start Time</th>
+		<th>End Time</th>
+		<th>Days of Week</th>
+		<th>Actions</th>
+	</tr>
+		<% @program.class_sessions.each do |session| %>
+			
+			<tr class="class sessions">
+				<td><%= session.session_display_order %></td>
+				<td><%= session.session_status_id %></td>
+				<td><%= session.name %></td>
+				<td><%= session.start_date %></td>
+				<td><%= session.end_date %></td>
+				<td><%= session.start_time %></td>
+				<td><%= session.end_time %></td>
+				<td><%= session.days_of_week %></td>
+				<td class="actions">
+				<%= link_to("Edit", {:action => 'edit', :controller => 'class_sessions', :id => session.id}, :class => 'action_edit') %>
+				</td>
+			</tr>
+		<% end %>
+
+</ div>		

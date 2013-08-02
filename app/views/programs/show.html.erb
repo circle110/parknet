@@ -1,0 +1,92 @@
+<div class="program list">
+<h2><%= @program.name %></h2>
+
+<table summary="Programs" class=listing">
+	<tr>
+		<th>Brochure Section Id</th>
+		<th>Brochure Subsection Id</th>
+		<th>Code</th>
+		<th>Minimum Age</th>
+		<th>Minimum Age Type</th>
+		<th>Maximum Age</th>
+		<th>Maximum Age Type</th>
+		<th>Default Minimum Registrants</th>
+		<th>Default Maximum Registrants</th>
+		<th>Schedule Payments Allowed Flag</th>
+		<th>Deferred GL Account Id</th>
+		<th>Internet Query Flag</th>
+		<th>Photo</th>
+		<th>Daycare Flag</th>
+		<th>Internet Registration Flag</th>
+		<th>Include in Tax Receipt Flag</th>
+		<th>Active</th>
+		<th>Alert Text</th>
+		<th>Confirmation text</th>
+		<th>Description</th>
+		<th>Actions</th>
+		
+
+	</tr>
+			<tr class="programs">
+				<td><%= @program.brochure_section_id %></td>
+				<td><%= @program.brochure_subsection_id %></td>
+				<td><%= @program.code %></td>
+				<td><%= @program.min_age %></td>
+				<td><%= @program.min_age_type %></td>
+				<td><%= @program.max_age %></td>
+				<td><%= @program.max_age_type %></td>
+				<td><%= @program.default_minimum_registrants %></td>
+				<td><%= @program.default_maximum_registrants %></td>
+				<td><%= @program.scheduled_payments_allowed_flag %></td>
+				<td><%= @program.deferred_gl_account_id %></td>
+				<td><%= @program.internet_query_flag %></td>
+				<td><%= @program.photo %></td>
+				<td><%= @program.daycare_flag %></td>
+				<td><%= @program.internet_registration_flag %></td>
+				<td><%= @program.include_in_tax_receipt_flag %></td>
+				<td><%= @program.active %></td>
+				<td><%= @program.alert_text %></td>
+				<td><%= @program.confirmation_text %></td>
+				<td><%= @program.description %></td>
+				<td class="actions">
+				<%= link_to("Show", {:action => 'show', :id => @program.id}, :class => 'action_show') %>
+				<%= link_to("Edit", {:action => 'edit', :id => @program.id}, :class => 'action_edit') %>
+				<%= link_to("Delete", '#', :class => 'action_delete') %>
+				</td>
+			</tr>
+
+</table>
+</div>
+<h2>Class Sessions</h2>
+<table summary="Class Sesssions" class=listing">
+	<tr>
+		<th>Session Display Order</th>
+		<th>Session Status Id</th>
+		<th>Name</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Start Time</th>
+		<th>End Time</th>
+		<th>Days of Week</th>
+		<th>Actions</th>
+	</tr>
+		<% @program.class_sessions.each do |session| %>
+			<tr class="class sessions">
+				<td><%= session.session_display_order %></td>
+				<td><%= session.session_status_id %></td>
+				<td><%= session.name %></td>
+				<td><%= session.start_date %></td>
+				<td><%= session.end_date %></td>
+				<td><%= session.start_time %></td>
+				<td><%= session.end_time %></td>
+				<td><%= session.days_of_week %></td>
+				<td class="actions">
+				<%= link_to("Edit", {:action => 'edit', :controller => 'class_sessions', :id => session.id}, :class => 'action_edit') %>
+				</td>
+			</tr>
+		<% end %>
+
+</table>
+
+
+	

@@ -1,0 +1,42 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @customers}) %>
+<div class="user new">
+	<h2>Add Head of Household</h2>
+	
+		<%= form_for @customer, url: {action: "add_member"}, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:account_id, :value => params["account_id"]) %>
+		<%= f.hidden_field(:head_of_household_flag, :value => '1') %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<table summary="Customer fields">
+			<tr>
+				<th>First Name</th>
+				<td><%= f.text_field(:first_name) %></td>
+			</tr>
+			<tr>
+				<th>Last Name</th>
+				<td><%= f.text_field(:last_name) %></td>
+			</tr>				
+			<tr>
+				<th>Email</th>
+				<td><%= f.text_field(:email) %></td>
+			</tr>
+			<tr>
+				<th>Birthday</th>
+				<td><%= f.date_select(:birthdate, :start_year => 1915, :end_year => Time.now.year, order: [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Gender</th>
+				<td><%= f.select(:gender_id, options_for_select([["Male", "m"], ["Female", "f"]]), prompt: "--Select Gender--") %></td>
+			</tr>
+			<tr>
+				<th>Alert text</th>
+				<td><%= text_area(:alert_text,'', size: "40x2", :class => "add_customer") %></td>
+			<tr>
+				<td colspan="2"><%= f.submit "Add Head of Household" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+	
+Next you will add additional members to the account

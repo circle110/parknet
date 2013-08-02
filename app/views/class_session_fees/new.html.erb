@@ -1,0 +1,38 @@
+<%= link_to("<<Back to Edit Class Session", {:action => 'edit', :controller => 'class_sessions'}, :class => 'back-link') %>
+
+<div class="fee new">
+	<h2>Create New Fee</h2>
+	<%= form_for @fee, url: {action: "create"}, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+	<%= f.hidden_field(:class_session_id, :value => params[:class_session_id]) %>
+	<%= hidden_field_tag('program_id', params[:program_id]) %>
+		<table summary="Fee form fields">
+			<tr>
+				<th>Fee Name</th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>
+			<tr>
+				<th>Fee Amount</th>
+				<td><%= f.text_field(:amount) %></td>
+			</tr>
+			<tr>
+				<th>Active</th>
+				<td><%= f.check_box(:active) %></td>
+			</tr>
+			<tr>
+				<th>Resident Type</th>
+				<td><%= f.select(:resident_type, [['Resident', "r"], ['Non-Resident', "n"]]) %></td>
+			</tr>
+			<tr>
+				<th>Member Type</th>
+				<td><%= f.select(:member_type, [["Does not apply", "b"], ['Member', "m"], ['Non-Member', "n"]]) %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Add New Fee" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

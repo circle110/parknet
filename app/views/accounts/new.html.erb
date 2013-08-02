@@ -1,0 +1,70 @@
+<%= link_to("<<Back to User List", {:action => 'list'}, :class => 'back-link') %>
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @account}) %>
+<div class="user new">
+	<h2>Create New Account</h2>
+	<%= form_for @account, url: {action: "create"}, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+Add new account step 1. You will add the people on the account in the next step.
+		<table summary="Account fields">
+			<tr>
+				<th>Address</th>
+				<td><%= f.text_field(:address) %></td>
+			</tr>
+			<tr>
+				<th>Address 2</th>
+				<td><%= f.text_field(:address_2) %></td>
+			</tr>
+			<tr>
+				<th>City</th>
+				<td><%= f.text_field(:city_id) %></td>
+			</tr>
+			<tr>
+				<th>State</th>
+				<td><%= f.text_field(:state) %></td>
+			</tr>	
+			<tr>
+				<th>Zip</th>
+				<td><%= f.text_field(:zip) %></td>
+			</tr>				
+			<tr>
+				<th>Email</th>
+				<td><%= f.text_field(:email) %></td>
+			</tr>
+			<tr>
+				<th>Email Private?</th>
+				<td><%= f.check_box(:email_private) %></td>
+			</tr>
+			<tr>
+				<th>Area Code</th>
+				<td><%= f.text_field(:home_area) %></td>
+			</tr>
+			<tr>
+				<th>Phone</th>
+				<td><%= f.text_field(:home_phone) %></td>
+			</tr>
+			<tr>
+				<th>Resident Flag</th>
+				<td><%= f.check_box(:resident_flag) %></td>
+			</tr>
+			<tr>
+				<th>Password</th>
+				<td><%= f.password_field(:password) %></td>
+			</tr>
+			<tr>
+				<th>Password Confirmation</th>
+				<td><%= f.password_field(:password_confirmation) %></td>
+			</tr>
+			<tr>
+				<th>Alert Text</th>
+				<td><%= f.text_area(:alert_text, size: "40x2") %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Create New Account" %>
+				Next: Add members to the account
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

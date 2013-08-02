@@ -1,0 +1,1 @@
+<div class="brochure section list"><h2>Maintain Brochure Sections</h2><%= link_to("Add New Brochure Section", :action => 'new', :class => 'action new') %><p>	<ul>	<% @brochure_sections.each do |brochure_section| %>		<li><%= link_to(brochure_section.name, {:action => 'edit', :id => brochure_section.id}, :class => 'action_edit') %></li>	<% end %>	</ul></div>	

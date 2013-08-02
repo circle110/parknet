@@ -1,0 +1,27 @@
+<%= link_to("<<Back to Brochure Section List", {:action => 'list'}, :class => 'back-link') %>
+
+<div class="brochure section edit">
+	<h2>Edit Brochure Section</h2>
+	<%= form_for @brochure_section, url: {action: "update"}, html: {class: "input_form"} do |f| %>
+	
+		<table summary="Brochure Section fields">
+			<tr>
+				<th>Name</th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>						
+			<tr>
+				<th>Active</th>
+				<td><%= f.check_box(:active) %></td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td><%= f.text_area(:description, size: "40x2") %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Post Brochure Section Edits" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>	

@@ -1,0 +1,63 @@
+<%= link_to("<<Back to Facility List", {:action => 'list'}, :class => 'back-link') %>
+
+<div class="facility edit">
+	<h2>Edit Facility</h2>
+	<%= form_for @facility, url: {action: "update", :id => @facility.id}, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<table summary="Facility form fields">
+			<tr>
+				<th>Facility Name</th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>
+			<tr>
+				<th>Facility Type</th>
+				<td><%= f.select(:facility_type_id, FacilityType.all.collect {|s| [s.name, s.id]}) %></td>
+			</tr>
+			<tr>
+				<th>Facility Supervisor</th>
+				<td><%= f.select(:facility_supervisor_id, StaffUser.all.collect {|s| [s.full_name_last_first, s.id]}) %></td>
+			</tr>
+			<tr>
+				<th>Parent Facility</th>
+				<td><%= f.select(:parent_facility_id, Facility.all.collect {|s| [s.name, s.id]}, { :include_blank => true }) %></td>
+			</tr>
+			<tr>
+				<th>Internet Query Flag</th>
+				<td><%= f.check_box(:internet_query_flag) %></td>
+			</tr>
+			<tr>
+				<th>Deposit Required Flag</th>
+				<td><%= f.check_box(:deposit_required_flag) %></td>
+			</tr>
+			<tr>
+				<th>Internet Availability Flag</th>
+				<td><%= f.check_box(:internet_availability_flag) %></td>
+			</tr>
+			<tr>
+				<th>Active?</th>
+				<td><%= f.check_box(:active) %></td>
+			</tr>
+			<tr>
+				<th>Deposit Amount</th>
+				<td><%= f.text_field(:deposit_amount) %></td>
+			</tr>
+			<tr>
+				<th>Alert Text</th>
+				<td><%= f.text_area(:alert_text, size: "40x2") %></td>
+			</tr>
+			<tr>
+				<th>Confirmation Text</th>
+				<td><%= f.text_area(:confirmation_text, size: "40x2") %></td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td><%= f.text_area(:description, size: "40x2") %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Update Facility" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

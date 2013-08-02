@@ -1,0 +1,23 @@
+<div class="account list">
+<h2>Accounts Found</h2>
+<%= link_to("Add New Account", :action => 'new', :class => 'action new') %>
+<%= @hp %>
+<table summary="Account" class=listing">
+	<tr>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>Email - Login Id</th>
+		<th>Actions</th>
+	</tr>
+	<%# @accounts.each do |cust| %>
+			<tr class="staff_users">
+				<td><%#= cust.first_name %></td>
+				<td><%#= cust.last_name %></td>
+				<td><%#= @accounts.first['email'] %></td>
+				<td class="actions">
+				<%#= link_to("Edit", {:action => 'edit', :id => @accounts.first['id']}, :class => 'action_edit') %>
+			</tr>
+
+	<%# end %>
+</table>
+</div>

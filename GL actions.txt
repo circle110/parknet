@@ -1,0 +1,6 @@
+Customer registers for program 	cash					accounts receivable		
+Customer pays for program		accounts receivable		deferred GL				
+Program start date arrives		deferred GL				program revenue		
+Customer requests refund		program revenue			refund clearing account
+Refund is processed				refund clearing account	customer account balance
+Refund is exported				

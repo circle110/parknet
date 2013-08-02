@@ -1,0 +1,39 @@
+<%= link_to("<<Back to Maintain Account", {:action => 'edit', :controller => 'accounts', :id => @customer.account_id}, :class => 'back-link') %>
+
+<div class="customer update">
+	<h2>Update Customer</h2>
+	<%= form_for @customer, url: {action: "update"}, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:account_id) %>
+		<table summary="Customer fields">
+			<tr>
+				<th>First Name</th>
+				<td><%= f.text_field(:first_name) %></td>
+			</tr>
+			<tr>
+				<th>Last Name</th>
+				<td><%= f.text_field(:last_name) %></td>
+			</tr>		
+			<tr>
+				<th>Head of Household</th>
+				<td><%= f.check_box(:head_of_household_flag) %></td>
+			</tr>			
+			<tr>
+				<th>Email</th>
+				<td><%= f.text_field(:email) %></td>
+			</tr>
+			<tr>
+				<th>Status</th>
+				<td><%= f.text_field(:status_id) %></td>
+			</tr>
+			<tr>
+				<th>Birthday</th>
+				<td><%= f.date_select(:birthdate, :start_year => 1915, :end_year => Time.now.year, order: [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Update Customer" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

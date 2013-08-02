@@ -1,0 +1,33 @@
+<%= link_to("<<Back to Gl Account List", {:action => 'list'}, :class => 'back-link') %>
+
+<div class="gl account new">
+	<h2>Create New Gl Account</h2>
+	<%= form_for @gl_account, url: {action: "create"}, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+	
+		<table summary="Gl Account fields">
+			<tr>
+				<th>Fund</th>
+				<td><%= f.select(:fund_id, Fund.all.collect {|s| [s.number_name, s.id]},{:include_blank => true}) %></td>
+			</tr>
+			<tr>
+				<th>Name</th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>			
+			<tr>
+				<th>Gl Account Number</th>
+				<td><%= f.text_field(:gl_account_number) %></td>
+			</tr>
+			<tr>
+				<th>active</th>
+				<td><%= f.check_box(:active, :checked => true) %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Create New Gl Account" %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>
+</ div>		

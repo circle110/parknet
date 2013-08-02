@@ -1,0 +1,56 @@
+<div class="account list">
+
+
+<% if @accounts.count != 0 %>
+<h2>Accounts Found</h2>
+<%= link_to("Add New Account", :action => 'new', :class => 'action new') %>
+<table summary="Account" class=listing">
+	<tr>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>Address</th>
+		<th>City</th>
+		<th>Actions</th>
+	</tr>
+	<% @accounts.each do |cust| %>
+			<tr class="staff_users">
+				<td><%= cust.first_name %></td>
+				<td><%= cust.last_name %></td>
+				<td><%= cust.account.address %></td>
+				<td><%= cust.city.name %></td>
+				<td class="actions">
+				<%= link_to("Select", {:action => 'registration', :id => cust.account.id, :previous_event => 'account_selected', :class_session_id => @class_session_id}, :class => 'action_select') %>
+			</tr>
+	<% end %>
+</table>
+<% else %>
+<p>
+No matching accounts found. <br>
+Please search again:<br>
+		<%= form_tag '/staff_registration/lookup_account', html: {class: "input_form"} do %>
+			<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
+			<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
+			<%= hidden_field_tag(:account_search, 1) %>
+			<%= hidden_field_tag(:class_session_id, @class_session_id ) %>
+			
+			<table summary="Account" class=listing">
+
+				<tr>
+					<th>Last Name</th>
+					<th>First Name</th>
+					<th>Phone Number</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td><%= text_field_tag(:last_name) %></td>
+					<td><%= text_field_tag(:first_name) %></td>
+					<td><%= text_field_tag(:home_phone) %></td>
+					<td><%= submit_tag "Search for account" %></td>
+				</tr>
+			</table>
+		<% end %>
+		
+		Or<br>
+<%= link_to("Add New Account", :action => 'new', :class => 'action new') %> 
+<% end %>
+</div>

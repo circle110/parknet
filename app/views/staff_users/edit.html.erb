@@ -1,0 +1,32 @@
+<%= link_to("<<Back to Staff User List", {:action => 'list'}, :class => 'back-link') %>
+
+<div class="user update">
+	<h2>Update Staff User</h2>
+	<%= form_for @staff_user, url: {action: "update"}, html: {class: "input_form"} do |f| %>
+		<table summary="Staff User fields">
+			<tr>
+				<th>First Name</th>
+				<td><%= f.text_field(:first_name) %></td>
+			</tr>
+			<tr>
+				<th>Last Name</th>
+				<td><%= f.text_field(:last_name) %></td>
+			</tr>			
+			<tr>
+				<th>Login Id</th>
+				<td><%= f.text_field(:email) %></td>
+			</tr>
+			<tr>
+				<th>Security Group</th>
+				<td><%= f.text_field(:security_group) %></td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit "Update Staff User" %>
+				</td>
+			</tr>
+		</ table>
+		
+		<table summary="Account Members" class="listing">
+
+	<% end %>
+</ div>		
