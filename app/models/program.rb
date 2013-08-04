@@ -4,6 +4,7 @@ class Program < ActiveRecord::Base
 	has_one :brochure_subsection 
 	has_many :class_sessions
 	has_many :class_session_fees, through: :class_sessions
+	has_many :registrations, through: :class_sessions
 	has_one :deferred_gl_account
 	
 	

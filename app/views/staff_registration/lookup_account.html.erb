@@ -32,22 +32,10 @@ Please search again:<br>
 			<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
 			<%= hidden_field_tag(:account_search, 1) %>
 			<%= hidden_field_tag(:class_session_id, @class_session_id ) %>
-			
-			<table summary="Account" class=listing">
 
-				<tr>
-					<th>Last Name</th>
-					<th>First Name</th>
-					<th>Phone Number</th>
-					<th></th>
-				</tr>
-				<tr>
-					<td><%= text_field_tag(:last_name) %></td>
-					<td><%= text_field_tag(:first_name) %></td>
-					<td><%= text_field_tag(:home_phone) %></td>
-					<td><%= submit_tag "Search for account" %></td>
-				</tr>
-			</table>
+
+			<%= text_field_tag(:search_text) %> <%= submit_tag "Search for account" %></td>
+
 		<% end %>
 		
 		Or<br>

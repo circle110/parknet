@@ -1,5 +1,6 @@
 class Agency < ActiveRecord::Base
 	has_many :accounts
+	has_many :customers, through: :accounts
 	has_many :account_contacts
 	has_many :addresses
 	has_many :brochure_sections

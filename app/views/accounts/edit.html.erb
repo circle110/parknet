@@ -1,53 +1,15 @@
 <%= render(:partial => 'shared/error_messages', :locals => {:object => @account}) %>
-<%= link_to("<<Back to Account List", {:action => 'list'}, :class => 'back-link') %>
+<%= link_to("<<Back to Account List", {:action => 'list', :account_id => @account.id}, :class => 'back-link') %>
 
 <div class="account update">
 	<h2>Update Account</h2>
-	<%= form_for @account, url: {controller: "accounts", action: "update"}, html: {class: "input_form"} do |f| %>
-		<table summary="Staff User fields">
-			<tr>
-				<th>Account Status</th>
-				<td><%= f.select(:account_status_id, options_for_select([["Active", "a"], ["Inactive", "i"], ["Deceased", "d"]]), prompt: "--Select Status--") %></td>
-			</tr>
-			<tr>
-				<th>Account Email</th>
-				<td><%= f.text_field(:email) %></td>
-			</tr>		
-			<tr>
-				<th>Address</th>
-				<td><%= f.text_field(:address) %></td>
-			</tr>
-			<tr>
-				<th>Address 2</th>
-				<td><%= f.text_field(:address_2) %></td>
-			</tr>
-			<tr>
-				<th>City</th>
-				<td><%= f.select(:city_id, City.all.collect {|c| [c.name, c.id]}) %></td>
-			</tr>
-			<tr>
-				<th>State</th>
-				<td><%= f.select(:state, options_for_select(us_states, :selected => @account.state)) %></td>
-			</tr>
-			<tr>
-				<th>Zip</th>
-				<td><%= f.text_field(:zip) %></td>
-			</tr>
-			<tr>
-				<th>Resident Flag</th>
-				<td><%= f.check_box(:resident_flag) %></td>
-			</tr>
-			<tr>
-				<td colspan="2"><%= f.submit "Update Account" %>
-				</td>
-			</tr>
-		</ table>
 
-	<% end %>
-	
+<%= render 'form' %>	
+
+	<table>
 		<tr>
 		<td colspan="4"><h2>Account Members</h2> 
-		<%= link_to("Add New Account Member", {:action => 'add_member	', :controller => 'customers', :account_id => @account.id, :agency_id => @account.agency_id}, 
+		<%= link_to("Add New Account Member", {:action => 'add_member', :controller => 'customers', :account_id => @account.id, :agency_id => @account.agency_id}, 
 		:class => 'add-customer-link') %> </td>
 		<td colspan="5">&nbsp;
 		</td>
@@ -74,8 +36,9 @@
 				<td><%= customer.birthdate.strftime("%b. %d, %Y") %></td>
 				<td class="actions">
 				<%= link_to("Edit", {:action => 'edit', :controller => 'customers', :id => customer.id}, :class => 'action_edit') %>
+				<%= link_to("View Registrations", {:action => 'show', :controller => 'registrations', :id => customer.id}, :class => 'action_edit') %>
 				</td>
 			</tr>
 		<% end %>
-		
+</table>		
 </ div>		

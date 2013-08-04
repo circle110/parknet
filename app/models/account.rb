@@ -8,9 +8,13 @@ class Account < ActiveRecord::Base
 	
 	EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
 	
+	validates :agency_id, :presence => true
+	validates :user_stamp, :presence => true
 	validates :email, :presence => true
+	validates :home_phone, :presence => true, :length => {:minimum => 7, :maximum => 10}
+	validates :home_area, :presence => true
+	validates :address, :city_id, :zip, :presence => true
 	validates_uniqueness_of :email
-	validates :zip, :presence => true
 	# only on create so other values can be modified later
 	validates_length_of :password, :within => 7..25, :on => :create	
 	#validates_length_of :password, :within => 7..25, :on => :update
@@ -25,10 +29,6 @@ class Account < ActiveRecord::Base
 	attr_accessible :agency_id, :account_status_id, :email, :hashed_password, :salt, :barcode_number, :address, :address_2, :city_id, :state, :zip, :home_area, 
 	:home_phone, :resident_flag, :current_balance, :future_balance, :unallocated_balance, :email_private, :alert_text, :user_stamp, :password, :password_confirmation
 	
-	def head_of_household(account_id)
-		#head_of_household = Customer.where(:account_id => account_id, :head_of_household => 1)
-		#"#{last_name}, #{first_name}"
-	end
 	
 	def pwd
 		@pwd = password

@@ -5,23 +5,31 @@ class AccountsController < ApplicationController
 	before_filter :confirm_logged_in
 
 	def list
-		#@accounts = Account.where(customer.head_of_household_flag = 1).order("accounts.customers.last_name, account.customers.first_name ASC")
-		@accounts = Account.scoped
-
-		if (params[:home_phone].present?)
-		@accounts = @accounts.includes(:customers).where(:home_phone => params[:home_phone])
+		@class_session_id = params[:class_session_id]
+		if params[:account_id]
+			@customers = Customer.includes(:account, :city).where("accounts.id = ?", params[:account_id])
+		else
+			search_text = params[:search_text] 
+			if search_text.respond_to?(:to_str)
+				last_name = search_text
+			else
+				last_name = ""
+			end
+			if search_text.match /^\d+(?:-\d+)*$/
+				phone = search_text
+				phone = phone.sub!(/-/, '')
+				#phone = phone.sub!(/./, '')
+				#phone = phone.sub!(/(/, '')
+				#phone = phone.sub!(/)/, '')
+			else
+				phone = ""
+			end
+			@customers = Customer.includes(:account, :city).where("customers.agency_id = ? AND (customers.last_name = ? OR accounts.home_phone = ?)", session[:agency_id], last_name, phone)
 		end
-		
-		if (params[:last_name].present?)
-		@accounts = @accounts.includes(:customers).where("customers.last_name like ?", params[:last_name])
-		end
-
-		@customers = Customer.includes(:account).where("customers.last_name = ? OR accounts.home_phone = ?", params[:last_name], params[:home_phone])
-
 	end
 	
 	def new
-		@account = Account.new	
+		@account = Account.new(:agency_id => session[:agency_id])
 	end
 	
 	def create
