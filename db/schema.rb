@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",           :null => false
   end
 
-  add_index "accounting_transactions", ["agency_id"], :name => "agency"
+  add_index "accounting_transactions", ["agency_id"], :name => "agency_id"
   add_index "accounting_transactions", ["credit_gl_account_id"], :name => "credit_gl"
   add_index "accounting_transactions", ["debit_gl_account_id"], :name => "debit_gl"
 
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                                                         :null => false
   end
 
-  add_index "accounts", ["agency_id"], :name => "agency"
+  add_index "accounts", ["agency_id"], :name => "agency_id"
   add_index "accounts", ["city_id"], :name => "city"
   add_index "accounts", ["user_stamp"], :name => "user_stamp"
 
@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "brochure_subsections", ["agency_id"], :name => "agency"
+  add_index "brochure_subsections", ["agency_id"], :name => "agency_id"
   add_index "brochure_subsections", ["brochure_section_id"], :name => "parent_brochure_section"
   add_index "brochure_subsections", ["user_stamp"], :name => "user_stamp"
 
