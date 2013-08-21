@@ -32,9 +32,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                          :null => false
   end
 
-  add_index "account_contacts", ["account_id"], :name => "account_id"
-  add_index "account_contacts", ["agency_id"], :name => "agency_id", :unique => true
-  add_index "account_contacts", ["user_stamp"], :name => "user_stamp"
 
   create_table "accounting_transactions", :force => true do |t|
     t.integer  "agency_id",            :null => false
@@ -50,9 +47,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",           :null => false
   end
 
-  add_index "accounting_transactions", ["agency_id"], :name => "agency_id"
-  add_index "accounting_transactions", ["credit_gl_account_id"], :name => "credit_gl"
-  add_index "accounting_transactions", ["debit_gl_account_id"], :name => "debit_gl"
 
   create_table "accounts", :force => true do |t|
     t.integer  "agency_id",                                                                          :null => false
@@ -78,9 +72,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                                                         :null => false
   end
 
-  add_index "accounts", ["agency_id"], :name => "agency_id"
-  add_index "accounts", ["city_id"], :name => "city"
-  add_index "accounts", ["user_stamp"], :name => "user_stamp"
 
   create_table "addresses", :force => true do |t|
     t.integer  "agency_id",                :null => false
@@ -95,8 +86,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "addresses", ["agency_id"], :name => "agency_id"
-  add_index "addresses", ["user_stamp"], :name => "user_stamp"
 
   create_table "agencies", :force => true do |t|
     t.string   "name",                       :limit => 30
@@ -116,7 +105,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_on"
   end
 
-  add_index "agencies", ["user_stamp"], :name => "user_stamp"
 
   create_table "brochure_sections", :force => true do |t|
     t.integer  "agency_id",                 :null => false
@@ -128,8 +116,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                :null => false
   end
 
-  add_index "brochure_sections", ["agency_id"], :name => "agency_id"
-  add_index "brochure_sections", ["user_stamp"], :name => "user_stamp"
 
   create_table "brochure_subsections", :force => true do |t|
     t.integer  "brochure_section_id",               :null => false
@@ -142,9 +128,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "brochure_subsections", ["agency_id"], :name => "agency_id"
-  add_index "brochure_subsections", ["brochure_section_id"], :name => "parent_brochure_section"
-  add_index "brochure_subsections", ["user_stamp"], :name => "user_stamp"
 
   create_table "cities", :force => true do |t|
     t.integer  "agency_id",                :null => false
@@ -155,8 +138,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "cities", ["agency_id"], :name => "agency_id"
-  add_index "cities", ["user_stamp"], :name => "user_stamp"
 
   create_table "class_session_fees", :force => true do |t|
     t.integer  "agency_id",                                                     :null => false
@@ -171,9 +152,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                                    :null => false
   end
 
-  add_index "class_session_fees", ["agency_id"], :name => "agency_id"
-  add_index "class_session_fees", ["class_session_id"], :name => "class_session_id"
-  add_index "class_session_fees", ["user_stamp"], :name => "user_stamp"
 
   create_table "class_sessions", :force => true do |t|
     t.integer  "agency_id",                                          :null => false
@@ -221,14 +199,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                         :null => false
   end
 
-  add_index "class_sessions", ["agency_id"], :name => "agency"
-  add_index "class_sessions", ["deferred_gl_account_id"], :name => "deferred_gl"
-  add_index "class_sessions", ["facility_id"], :name => "facility_id"
-  add_index "class_sessions", ["gl_account_id"], :name => "gl_account"
-  add_index "class_sessions", ["program_id"], :name => "program_id"
-  add_index "class_sessions", ["season_id"], :name => "season"
-  add_index "class_sessions", ["supervisor_id"], :name => "supervisor"
-  add_index "class_sessions", ["user_stamp"], :name => "user_stamp"
 
   create_table "customers", :force => true do |t|
     t.integer  "agency_id",                                                 :null => false
@@ -262,9 +232,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                                :null => false
   end
 
-  add_index "customers", ["account_id"], :name => "account_id"
-  add_index "customers", ["agency_id"], :name => "agency_id"
-  add_index "customers", ["user_stamp"], :name => "user_stamp"
 
   create_table "facilities", :force => true do |t|
     t.integer  "agency_id",                                               :null => false
@@ -286,12 +253,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                              :null => false
   end
 
-  add_index "facilities", ["agency_id"], :name => "agency_id"
-  add_index "facilities", ["facility_supervisor_id"], :name => "facility_supervisor_id"
-  add_index "facilities", ["facility_type_id"], :name => "facility_type_id"
-  add_index "facilities", ["gl_account_id"], :name => "gl_account"
-  add_index "facilities", ["parent_facility_id"], :name => "parent_facility"
-  add_index "facilities", ["user_stamp"], :name => "user_stamp"
 
   create_table "facility_bookings", :force => true do |t|
     t.integer  "agency_id",                     :null => false
@@ -307,10 +268,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at"
   end
 
-  add_index "facility_bookings", ["agency_id"], :name => "agency_id"
-  add_index "facility_bookings", ["class_session_id"], :name => "class_session_id"
-  add_index "facility_bookings", ["facility_id"], :name => "facility_id"
-  add_index "facility_bookings", ["user_stamp"], :name => "user_stamp"
 
   create_table "facility_types", :force => true do |t|
     t.integer  "agency_id",                :null => false
@@ -320,8 +277,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "facility_types", ["agency_id"], :name => "agency_id"
-  add_index "facility_types", ["user_stamp"], :name => "user_stamp"
 
   create_table "funds", :force => true do |t|
     t.integer  "agency_id",                :null => false
@@ -333,8 +288,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "funds", ["agency_id"], :name => "agency_id"
-  add_index "funds", ["user_stamp"], :name => "user_stamp"
 
   create_table "gl_accounts", :force => true do |t|
     t.integer  "agency_id",                        :null => false
@@ -348,9 +301,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                       :null => false
   end
 
-  add_index "gl_accounts", ["agency_id"], :name => "agency_id"
-  add_index "gl_accounts", ["fund_id"], :name => "fund_id"
-  add_index "gl_accounts", ["user_stamp"], :name => "user_stamp"
 
   create_table "membership_1_levels", :force => true do |t|
     t.integer  "agency_id",                    :null => false
@@ -368,7 +318,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                   :null => false
   end
 
-  add_index "membership_1_levels", ["agency_id"], :name => "agency_id"
 
   create_table "membership_2_levels", :force => true do |t|
     t.integer  "agency_id",                    :null => false
@@ -386,7 +335,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                   :null => false
   end
 
-  add_index "membership_2_levels", ["agency_id"], :name => "agency_id"
 
   create_table "membership_3_levels", :force => true do |t|
     t.integer  "agency_id",                    :null => false
@@ -404,7 +352,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                   :null => false
   end
 
-  add_index "membership_3_levels", ["agency_id"], :name => "agency_id"
 
   create_table "membership_terms", :force => true do |t|
     t.integer  "agency_id",                :null => false
@@ -416,7 +363,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "membership_terms", ["agency_id"], :name => "agency_id"
 
   create_table "memberships", :force => true do |t|
     t.integer  "agency_id",                       :null => false
@@ -432,7 +378,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                      :null => false
   end
 
-  add_index "memberships", ["agency_id", "level_1_id", "level_2_id", "level_3_id", "membership_term_id"], :name => "agency_id"
 
   create_table "payment_allocations", :force => true do |t|
     t.integer  "agency_id",       :null => false
@@ -445,7 +390,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",      :null => false
   end
 
-  add_index "payment_allocations", ["agency_id", "payment_id"], :name => "agency_id"
 
   create_table "payments", :force => true do |t|
     t.integer  "agency_id",                         :null => false
@@ -462,8 +406,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                        :null => false
   end
 
-  add_index "payments", ["agency_id", "location_id", "user_stamp"], :name => "agency_id"
-  add_index "payments", ["creation_user_stamp"], :name => "creation_user_stamp"
+
 
   create_table "programs", :force => true do |t|
     t.integer  "agency_id",                                      :null => false
@@ -493,11 +436,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                     :null => false
   end
 
-  add_index "programs", ["agency_id"], :name => "agency"
-  add_index "programs", ["brochure_section_id"], :name => "brochure_section"
-  add_index "programs", ["brochure_subsection_id"], :name => "brochure_subsection"
-  add_index "programs", ["deferred_gl_account_id"], :name => "deferred_gl"
-  add_index "programs", ["user_stamp"], :name => "user_stamp"
 
   create_table "registration_basket_line_items", :force => true do |t|
     t.integer  "registration_basket_id", :null => false
@@ -507,8 +445,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",             :null => false
   end
 
-  add_index "registration_basket_line_items", ["class_session_id"], :name => "class_session_id"
-  add_index "registration_basket_line_items", ["registration_basket_id"], :name => "registration_basket_id"
 
   create_table "registration_baskets", :force => true do |t|
     t.integer  "agency_id",   :null => false
@@ -519,8 +455,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",  :null => false
   end
 
-  add_index "registration_baskets", ["agency_id", "customer_id"], :name => "agency_id"
-  add_index "registration_baskets", ["customer_id"], :name => "customer_id"
 
   create_table "registrations", :force => true do |t|
     t.integer  "agency_id",                                         :null => false
@@ -546,8 +480,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",               :null => false
   end
 
-  add_index "season_titles", ["agency_id"], :name => "agency"
-  add_index "season_titles", ["user_stamp"], :name => "user_stamp"
 
   create_table "seasons", :force => true do |t|
     t.integer  "agency_id",                                       :null => false
@@ -564,9 +496,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                      :null => false
   end
 
-  add_index "seasons", ["agency_id"], :name => "agency_id"
-  add_index "seasons", ["season_title_id"], :name => "season_title"
-  add_index "seasons", ["user_stamp"], :name => "user_stamp"
 
   create_table "staff_supervisor", :force => true do |t|
     t.integer  "agency_id",     :null => false
@@ -576,9 +505,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "staff_supervisor", ["agency_id"], :name => "agency_id"
-  add_index "staff_supervisor", ["staff_user_id"], :name => "staff_user_id"
-  add_index "staff_supervisor", ["user_stamp"], :name => "user_stamp"
 
   create_table "staff_users", :force => true do |t|
     t.integer  "agency_id",                                    :null => false
@@ -594,8 +520,5 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",                                   :null => false
   end
 
-  add_index "staff_users", ["agency_id"], :name => "agency_id"
-  add_index "staff_users", ["email"], :name => "unique_login", :unique => true
-  add_index "staff_users", ["user_stamp"], :name => "user_stamp"
 
 end
