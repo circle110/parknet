@@ -19,8 +19,10 @@ class BrochureSubsectionsController < ApplicationController
 	def create
 		@brochure_subsection = BrochureSubsection.new(params[:brochure_subsection])
 		if @brochure_subsection.save
+			flash[:notice] = "Brochure Subsection \"#{@brochure_subsection.name}\" Created."
 			redirect_to(:action => 'list')
 		else
+			flash[:notice] = "Brochure Subsection creation failed"
 			render('new')
 		end		
 	end
@@ -32,8 +34,10 @@ class BrochureSubsectionsController < ApplicationController
 	def update
 		@brochure_subsection = BrochureSubsection.find(params[:id])
 		if @brochure_subsection.update_attributes(params[:brochure_subsection])
+			flash[:notice] = "Brochure Subsection \"#{@brochure_subsection.name}\" updated."
 			redirect_to(:action => 'list')
 		else
+			flash[:notice] = "Brochure Subsection update failed"
 			render('edit')
 		end	
 	end	

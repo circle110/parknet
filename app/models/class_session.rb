@@ -3,11 +3,13 @@ class ClassSession < ActiveRecord::Base
 	belongs_to :program
 	belongs_to :season
 	belongs_to :staff_user
-	has_one :facility
+	belongs_to :facility
 	has_many :facility_bookings
-	has_one :gl_account
-	has_one :deferred_gl_account
+	belongs_to :gl_account
+	belongs_to :deferred_gl_account
 	has_many :class_session_fees
+	has_many :registrations
+
 	
 	attr_accessible :agency_id, :program_id, :season_id, :name, :session_display_order, :session_status_id, :facility_id, :start_date, :end_date,
 	:start_time, :end_time, :sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :number_of_bookings, :supervisor_id, :registration_start_datetime, :minimum_registrants, 

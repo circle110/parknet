@@ -1,32 +1,28 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @brochure_subsection}) %>
 <%= link_to("<<Back to Brochure Subsection List", {:action => 'list'}, :class => 'back-link') %>
 
 <div class="brochure section update">
 	<h2>Edit Brochure Subsection</h2>
-	<%= form_for @brochure_subsection, url: {action: "update"}, html: {class: "input_form"} do |f| %>
-		<table summary="Brochure Subsection fields">
+	<%= form_for @brochure_subsection do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		
+		<table summary="Brochure Subsection fields" cellpadding="5">
 			<tr>
-				<th>Agency ID</th>
-				<td><%= f.text_field(:agency_id) %></td>
-			</tr>
-			<tr>
-				<th>Brochure Section</th>
+				<th><%= f.label(:brochure_section_id, "Brochure Section") %></th>
 				<td><%= f.select(:brochure_section_id, BrochureSection.all.collect {|s| [s.name, s.id]}) %></td>
 			</tr>
 			<tr>
-				<th>Name</th>
+				<th><%= f.label(:name, "Name") %></th>
 				<td><%= f.text_field(:name) %></td>
 			</tr>						
 			<tr>
-				<th>Active</th>
-				<td><%= f.text_field(:active) %></td>
+				<th><%= f.label(:active, "Active") %></th>
+				<td><%= f.check_box(:active) %></td>
 			</tr>
 			<tr>
-				<th>Description</th>
-				<td><%= f.text_field(:description) %></td>
-			</tr>
-			<tr>
-				<th>User Stamp Id</th>
-				<td><%= f.text_field(:user_stamp) %></td>
+				<th><%= f.label(:description, "Description") %></th>
+				<td><%= f.text_area(:description, :size => "40x2") %></td>
 			</tr>
 			<tr>
 				<td colspan="2"><%= f.submit "Post Brochure Subsection Edits" %>
@@ -35,4 +31,4 @@
 		</ table>
 
 	<% end %>
-</ div>	
+</ div>

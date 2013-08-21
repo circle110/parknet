@@ -23,7 +23,11 @@
 			</tr>
 			<tr>
 				<th>Status</th>
-				<td><%= f.text_field(:status_id) %></td>
+				<td><%= f.select(:status_id, [["Active", "a"], ["Inactive", "i"], ["Frozen", "f"], ["Deceased", "d"]], {:selected => "#{@customer.status_id}"}) %></td>
+			</tr>
+			<tr>
+				<th>Gender</th>
+				<td><%= f.select(:gender_id, [["Male", "m"], ["Female", "f"]], {prompt: "--Select Gender--", :selected => "#{@customer.gender_id}"}) %></td>
 			</tr>
 			<tr>
 				<th>Birthday</th>

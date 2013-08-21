@@ -1,9 +1,12 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @brochure_section}) %>
 <%= link_to("<<Back to Brochure Section List", {:action => 'list'}, :class => 'back-link') %>
 
 <div class="brochure section edit">
 	<h2>Edit Brochure Section</h2>
-	<%= form_for @brochure_section, url: {action: "update"}, html: {class: "input_form"} do |f| %>
-	
+	<%= form_for @brochure_section do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		
 		<table summary="Brochure Section fields">
 			<tr>
 				<th>Name</th>
@@ -11,7 +14,7 @@
 			</tr>						
 			<tr>
 				<th>Active</th>
-				<td><%= f.check_box(:active) %></td>
+				<td><%= f.check_box(:active, :checked => true) %></td>
 			</tr>
 			<tr>
 				<th>Description</th>

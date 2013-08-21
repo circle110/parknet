@@ -9,7 +9,6 @@ class BrochureSectionsController < ApplicationController
 	end
 	
 	def show
-	
 	end
 	
 	def new	
@@ -21,6 +20,7 @@ class BrochureSectionsController < ApplicationController
 		if @brochure_section.save
 			redirect_to(:action => 'list')
 		else
+			flash[:notice] = "Creation of new Brochure Section Failed"
 			render('new')
 		end		
 	end
@@ -32,9 +32,10 @@ class BrochureSectionsController < ApplicationController
 	def update
 		@brochure_section = BrochureSection.find(params[:id])
 		if @brochure_section.update_attributes(params[:brochure_section])
-			flash[:notice] = "Brochure Section #{params[:brochure_section][:name]} has been updated."
+			flash[:notice] = "Brochure Section \"#{params[:brochure_section][:name]}\" has been updated."
 			redirect_to(:action => 'list')
 		else
+			flash[:notice] = "Update of Brochure Section Failed"
 			render('edit')
 		end	
 	end	

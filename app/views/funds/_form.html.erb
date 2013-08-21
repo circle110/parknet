@@ -1,0 +1,53 @@
+	<%= form_for @fund, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<table summary="Fund form fields">
+			<tr>
+				<th><%= f.label(:name) %></th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>
+			<tr>
+				<th><%= f.label(:fund, 'Fund Number') %></th>
+				<td><%= f.text_field(:fund) %></td>
+			</tr>
+			<tr>
+				<th><%= f.label(:active) %></th>
+				<td>
+				<% if @fund.new_record? %>
+					<%= f.check_box(:active, :checked => true) %>
+					<% submit_text = "Add New Fund" %>
+				<% else %>
+					<%= f.check_box(:active) %>
+					<% submit_text = "Post Fund Edits" %>
+				<% end %>
+				</td>
+			</tr>
+			
+	<% if @fund.new_record? %>
+		<% i = 0 %>
+		<%= f.fields_for :gl_accounts do |builder| %>
+			<% gl_types = ["Cash Account","Credit Card Account","Customer Account Balances","Refunds Pending Account","Deferred Revenue Account"] %>
+			<% account_types = [6,7,3,8,4] %>
+			
+			<%= builder.hidden_field :agency_id, :value => session[:agency_id] %>
+			<%= builder.hidden_field :user_stamp, :value => session[:staff_user_id] %>
+			<%= builder.hidden_field :account_type, :value => account_types[i] %>
+			<%= builder.hidden_field :name, :value => gl_types[i] %>
+			<%= builder.hidden_field :active, :value => 1 %>
+		
+			<tr>
+				<th><%= builder.label :gl_account_number, "#{gl_types[i]} GL Number" %></th>
+				<td><%= builder.text_field :gl_account_number %></td>
+			</tr>
+			<% i += 1 %>
+		<% end %>
+
+	<% end %>
+	
+			<tr>
+				<td colspan="2"><%= f.submit submit_text %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

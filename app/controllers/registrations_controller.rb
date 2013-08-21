@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
 	before_filter :confirm_logged_in
 
 def show
-	@registrations = Registration.includes(:class_session, :program).where("registrations.customer_id = ?", params[:id])
+	@registrations = Registration.where("customer_id = ?", params[:id])
 	@customer = Customer.find(params[:id])
 end
 

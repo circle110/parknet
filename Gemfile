@@ -9,6 +9,11 @@ gem 'bootstrap-will_paginate', '0.0.6'
 gem 'jquery-rails', '2.0.2'
 gem 'strong_parameters'
 gem 'devise'
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
+gem 'coffee-rails', '3.2.2'
+gem "therubyracer"
+gem "less-rails"
+gem 'twitter-bootstrap-rails'
 
 group :development, :test do
   gem 'mysql2'
@@ -25,9 +30,7 @@ group :assets do
   gem 'sass-rails',   '3.2.5'
   gem 'coffee-rails', '3.2.2'
   gem 'uglifier', '1.2.3'
-  gem "therubyracer"
-  gem "less-rails"
-  gem 'twitter-bootstrap-rails'
+
 end
 
 group :test do
@@ -42,4 +45,5 @@ end
 
 group :production do
   gem 'pg', '0.12.2'
+  gem 'rails_12factor'
 end

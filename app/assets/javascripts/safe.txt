@@ -1,0 +1,70 @@
+jQuery ->
+  Stripe.setPublishableKey($('meta[name="stripe-key"]').attr('content'))
+  charge.setupForm()
+	
+charge =
+  setupForm: ->
+    $('#new_payment').submit ->
+      alert('gotcha')
+      $('input[type=submit]').attr('disabled', true)
+      charge.processCard()
+      false
+
+  processCard: ->
+    card =
+      amount: $('#amount').val()
+      number: $('#card_number').val()
+      cvc: $('#card_code').val()
+      expMonth: $('#card_month').val()
+      expYear: $('#card_year').val()
+    Stripe.createToken(card, charge.handleStripeResponse)
+
+  handleStripeResponse: (status, response) ->
+    if status == 200
+      alert(response.id)
+    else
+      alert(response.error.message)
+	  
+	  
+	  
+Stripe.setPublishableKey('pk_test_ldAbOSYOYB7gnfM5iH3jsco4');
+ 
+var stripeResponseHandler = function(status, response) {
+var $form = $('#new_payment');
+ 
+if (response.error) {
+// Show the errors on the form
+$form.find('.payment-errors').text(response.error.message);
+$form.find('submit').prop('disabled', false);
+} else {
+// token contains id, last4, and card type
+var token = response.id;
+// Insert the token into the form so it gets submitted to the server
+$form.append($('<input type="hidden" name="stripeToken" />').val(token));
+// and re-submit
+$form.get(0).submit();
+}
+};
+ 
+jQuery(function($) {
+$('#new_payment').submit(function(e) {
+var $form = $(this);
+alert('gotcha');
+ 
+// Disable the submit button to prevent repeated clicks
+$form.find('submit').prop('disabled', true);
+ 
+Stripe.createToken($form, stripeResponseHandler);
+ 
+// Prevent the form from submitting with the default action
+return false;
+});
+});
+
+
+
+    jQuery(function($) {
+	$("#new_payment").submit(function() {
+	alert('worked');
+	});
+	}); 

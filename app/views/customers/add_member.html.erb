@@ -8,7 +8,7 @@
 				</tr>	
 				<tr>
 					<th>Phone</th>
-					<td>(<%= @account.first.account.home_area %>) <%= @account.first.account.home_phone %></td>
+					<td>(<%= @account.first.account.home_area %>) <%= @account.first.account.home_phone[0..2] %>-<%= @account.first.account.home_phone[3..6] %></td>
 				</tr>				
 				<tr>
 					<th>Address</th>
@@ -48,7 +48,7 @@
 		<% @account.each do |customer| %>
 			
 			<tr>
-				<td><%= customer.head_of_household_flag == 1 ? "X":"" %></td>
+				<td><%= customer.head_of_household_flag == 1 ? " ✓ ":"" %></td>
 				<td><%= customer.first_name %></td>
 				<td><%= customer.last_name %></td>
 				<td><%= distance_of_time_in_words(Time.now, customer.birthdate) %></td>
@@ -67,27 +67,27 @@
 		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
 		<table summary="Customer fields">
 			<tr>
-				<th>First Name</th>
+				<th><%= f.label(:first_name) %></th>
 				<td><%= f.text_field(:first_name) %></td>
 			</tr>
 			<tr>
-				<th>Last Name</th>
+				<th><%= f.label(:last_name) %></th>
 				<td><%= f.text_field(:last_name) %></td>
 			</tr>				
 			<tr>
-				<th>Email</th>
+				<th><%= f.label(:email) %></th>
 				<td><%= f.text_field(:email) %></td>
 			</tr>
 			<tr>
-				<th>Birthday</th>
+				<th><%= f.label(:birthdate, "Birthday") %></th>
 				<td><%= f.date_select(:birthdate, :start_year => 1915, :end_year => Time.now.year, order: [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
-				<th>Gender</th>
-				<td><%= f.select(:gender_id, options_for_select([["Male", "m"], ["Female", "f"]]), prompt: "--Select Gender--") %></td>
+				<th><%= f.label(:gender_id, "Gender") %></th>
+				<td><%= f.select(:gender_id, options_for_select([["Male", "m"], ["Female", "f"]]), prompt: "--Select Gender--", selected: => @account.gender_id) %></td>
 			</tr>
 			<tr>
-				<th>Alert text</th>
+				<th><%= f.label(:alert_text) %></th>
 				<td><%= text_area(:alert_text,'', size: "40x2", :class => "add_customer") %></td>
 			<tr>
 				<td colspan="2"><%= f.submit "Add Account Member" %>

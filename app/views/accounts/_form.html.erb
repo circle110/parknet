@@ -16,6 +16,16 @@
 				<%= f.label :email, 'Account Email' %>
 				<%= f.text_field(:email) %>
 			</li>
+			<% if @account.new_record? %>
+			<li class="field">
+				<%= f.label :password, 'Password' %>
+				<%= f.password_field(:password) %>
+			</li>
+			<li class="field">
+				<%= f.label :password_confirmation, 'Confirm Password' %>
+				<%= f.password_field(:password_confirmation) %>
+			</li>
+			<% end %>
 			<li class="field">
 				<%= f.label :email_private, 'Email Private?' %>
 				<%= f.check_box(:email_private) %>

@@ -1,0 +1,46 @@
+<%= form_for @gl_account, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+	<table summary="Gl Account fields">
+		<tr>
+			<th>Fund</th>
+			<td>
+			<% if @gl_account.new_record? %>
+				<%= f.select(:fund_id, Fund.all.collect {|s| [s.number_name, s.id]},{:include_blank => "Please Select Fund"}) %>
+			<% else %>
+				<%= f.select(:fund_id, Fund.all.collect {|s| [s.number_name, s.id]}) %>
+			<% end %>
+			</td>
+		</tr>
+		<tr>
+			<th>Name</th>
+			<td><%= f.text_field(:name) %></td>
+		</tr>			
+		<tr>
+			<th>Gl Account Number</th>
+			<td><%= f.text_field(:gl_account_number) %></td>
+		</tr>
+		<tr>
+			<th>Account Type</th>
+			<td><%= f.select(:account_type, [["Bank Charges", 1], ["Program Revenue", 2], ["Customer Account Balances", 3], ["Deferred Revenue", 4], 
+			["Extra Fee Revenue", 5], ["Cash", 6], ["Credit Card", 7], ["Refund Pending", 8], ["Tax", 9]], {:include_blank => "Please Select Account Type"}) %></td>
+		<tr>
+			<th>active</th>
+			<td>
+			<% if @gl_account.new_record? %>
+				<%= f.check_box(:active, :checked => true) %>
+				<% submit_text = "Add New GL Account" %>
+			<% else %>
+				<%= f.check_box(:active) %>
+				<% submit_text = "Post Gl Account Edits" %>
+			<% end %>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+			<%= f.submit "#{submit_text}" %>
+			</td>
+		</tr>
+	</ table>
+
+<% end %>

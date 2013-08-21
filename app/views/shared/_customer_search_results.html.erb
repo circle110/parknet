@@ -1,0 +1,17 @@
+<table summary="Account" class=listing" cellpadding="5">
+	<tr>
+		<th>Name</th>
+		<th>Phone</th>
+		<th>Account Email/Login</th>
+		<th>Address</th>
+	</tr>
+	<% @customers.each do |cust| %>
+			<tr class="staff_users">
+				<td><%= link_to("#{cust.first_name} #{cust.last_name}", {:action => 'edit', :id => cust.account.id, :previous_event => 'account_selected'}, :class => 'action_edit') %></td>
+				<td>(<%= cust.account.home_area %>) <%= cust.account.home_phone[0..2] %>-<%= cust.account.home_phone[3..6] %></td>
+				<td><%= cust.account.email %></td>
+				<td><%= cust.account.address %> <%= cust.account.address_2 %> <%= cust.account.city.name %>, <%= cust.account.state %> <%= cust.account.zip %></td>
+			</tr>
+
+	<% end %>
+</table>

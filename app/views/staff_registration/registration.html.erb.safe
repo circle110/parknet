@@ -1,0 +1,164 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @registration}) %>
+<h3>Program Registration</h3>
+<% if session[:account_id] %>
+	<h5>Select Different Account</h5>
+<% else %>
+	<h5>Search for Account</h5>
+<% end %>
+<%= render 'shared/account_search_form' %>
+<% if session[:account_id] %>
+<div class="account registration">
+		<% account_id = @account.first.account.id %>
+		<table summary="Selected Accounts">
+				<tr>
+					<th>Email</th>
+					<td><%= @account.first.account.email %></td>
+				</tr>	
+				<tr>
+					<th>Phone</th>
+					<% phone = @account.first.account.home_phone.split('') %>
+					<td>(<%= @account.first.account.home_area %>) <%= @account.first.account.home_phone[0..2] %>-<%= @account.first.account.home_phone[3..6] %></td>
+				</tr>				
+				<tr>
+					<th>Address</th>
+					<td><%= @account.first.account.address %></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><%= @account.first.city.name %>, <%= @account.first.account.state %> <%= @account.first.account.zip %></td>
+				</tr>
+				<tr>
+					<th>Resident</th>
+					<td><%= @account.first.account.resident_flag = 1 ? "Yes":"No" %></td>
+				</tr>
+				<tr>
+					<th>Account Balance >> </th>
+					<% balance = @account.first.account.current_balance %>
+					<% display_balance = number_to_currency(balance) %>
+					<td><%= balance > 0 ? "<font color=\"red\">#{display_balance}</font>":"#{display_balance}" %> || <%= link_to("View Accounting History", {:action => 'show_account_history', :controller => 'accounting_transactions', :account_id => session[:account_id], :from => 'registration'}, 
+		:class => 'add-customer-link') %> || Make a Payment: <%= link_to("Cash/Check", {:action => 'take_payment', :controller => 'payments', 
+		:account_id => account_id}, :class => 'select-session-link') %> |  <%= link_to("Credit Card", {:action => 'new', :controller => 'charges', 
+		:account_id => account_id}, :class => 'select-session-link') %></td>
+				</tr>
+		</ table>
+
+	<table>
+		<tr>
+		<td colspan="2"><h4>Account Members</h4></td>
+		<td><%= link_to("Edit Account", {:action => 'edit', :controller => 'accounts', :id => @account.first.id}, :class => 'action_edit') %></td>
+		<td colspan="2">View all account registrations</td>
+	</tr>
+	<tr>
+		<th>Head Of Household</th>
+		<th>Name</th>
+		<th>Birthday</th>
+		<th>Age</th>
+		<th></th>
+
+	</tr>
+		
+		<% @account.each do |customer| %>
+			
+			<tr>
+				<td><%= customer.head_of_household_flag == 1 ? " ✓ ":"" %></td>
+				<td><%= customer.first_name %> <%= customer.last_name %></td>
+				<td><%= customer.birthdate.strftime("%b. %d, %Y") %></td>
+				<td><%= distance_of_time_in_words(Time.now, customer.birthdate) %></td>
+				<td><%= link_to("View Registrations", {:action => 'show', :controller => 'registrations', :id => customer.id}, :class => 'action_edit') %></td>
+			</tr>
+		<% end %>
+	</table>	
+</ div>	
+
+<% end %>
+--------------------------------------------------------------------------------------------------------------------------------------------
+<% if session[:class_session_id] %>
+	<% search_verbage = "Select Different Program" %>
+	<div class="program display">
+		<h4><%= @program.first.name %> - <%= @class_sessions.first.class_session.session_display_order %></h4>
+
+<% else %>
+	<% search_verbage = "Search for Program" %>
+<% end %>
+	<%= form_tag '/staff_registration/lookup_program', html: {class: "input_form"} do %>
+		<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
+		<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
+		<%= hidden_field_tag(:account_id, @account_id) %>
+	
+	<h5><%= search_verbage %></h5>
+	<table colspan="4">
+	<tr>
+		<td>
+			<%= text_field_tag(:search_text) %></td>
+		<td>
+			<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :selected => @season_id) %>
+		</td>
+		<td><%= submit_tag "Search for program" %></td>
+		</tr>
+		</table>	
+	
+	<% end %>
+
+<% if session[:class_session_id] %>	
+		<%= link_to("Select different Class Session of this same program", {:action => 'lookup_program', :account_id => account_id, :program_id => @class_sessions.first.class_session.program_id}, 
+		:class => 'select-session-link') %> <br>
+		<%= @program.first.code %><br>
+		Ages: <%= @program.first.min_age %> <%= @program.first.min_age_type %> - <%= @program.first.max_age %> <%= @program.first.max_age_type %><br>
+		Minimum Registrants: <%= @program.first.default_minimum_registrants %>, Maximum Registrants: <%= @program.first.default_maximum_registrants %><br>
+
+		</div>
+		<table summary="Class Sesssions" class=listing">
+			<tr>
+				<th>Status</th>
+				<th>Available</th>
+				<th>Start Date</th>
+				<th>End Date</th>
+				<th>Start Time</th>
+				<th>End Time</th>
+				<th>Days of Week</th>
+				<th>Fee</th>
+				<th>Register</th>
+			</tr>
+				<%# @class_sessions.each do |session| %>
+					<% days_of_week = get_days_of_week(@class_sessions.first.class_session.id) %>
+					<% bookings = @class_sessions.first.class_session.number_registered == nil ? 0:@class_sessions.first.class_session.number_registered %>
+					<% @basket = 0 %>
+					<% available = @program.first.default_maximum_registrants - bookings %>
+					<% available = available < 0 ? 0:available %>
+					<% waitlist_verbage = available <= 0 ? "Course is full. If registered, the customer will be waitlisted.":"" %>
+					<% waitlist_flag = available <= 0 ? 1:0 %>
+					<% current_date = Date.today %>
+					<% date_verbage = current_date >= @class_sessions.first.class_session.start_date ? "Class has already started":"" %>
+					<% date_verbage = current_date >= @class_sessions.first.class_session.end_date ? "Class is completed":"" %>
+					<%= form_for @registration, :url => {:action => 'create_registration'}, html: {class: "reg_form"} do |f| %>
+					<tr class="class sessions">
+						<td><%= @class_sessions.first.class_session.session_status_id %></td>
+						<td><%= available %></td>
+						<td><%= @class_sessions.first.class_session.start_date.strftime("%b. %d %Y") %></td>
+						<td><%= @class_sessions.first.class_session.end_date.strftime("%b. %d %Y") %></td>
+						<td><%= @class_sessions.first.class_session.start_time.strftime("%I:%M %p") %></td>
+						<td><%= @class_sessions.first.class_session.end_time.strftime("%I:%M %p") %></td>
+						<td><%= days_of_week %></td>
+						<td><%= select_tag "fee_amount", options_from_collection_for_select(@class_sessions.collect, :amount, :name_amount), prompt: "--Select Fee--" %>
+						</td>
+						<td>
+							<%= hidden_field_tag 'agency_id', session[:agency_id] %>
+							<%= hidden_field_tag 'account_id', @account.first.account.id %>
+							<%= hidden_field_tag 'user_stamp', session[:staff_user_id] %>
+							<%= hidden_field_tag 'class_session_id', @class_sessions.first.class_session.id %>
+							<%= hidden_field_tag 'waitlist_flag', waitlist_flag %>
+							<%= select_tag "customer_id", options_from_collection_for_select(Customer.where(:account_id => account_id).collect, :id, :full_name), prompt: "--Select Person--" %>
+							<%= submit_tag "Register" %>
+							<%= waitlist_verbage %> <%= date_verbage %>
+						
+						<% end %>
+						</td>
+					</tr>
+				<%# end %>
+
+		</table>
+
+		</div>
+
+<% end %>
+

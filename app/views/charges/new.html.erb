@@ -1,0 +1,47 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @payment}) %>
+<%= link_to("<<Cancel payment and go back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+
+<h4>Take Payment for Account <%= @account.email %></h4>
+<strong>Account Balance: <%= number_to_currency(@account.current_balance) %></strong><p>
+
+
+<%= form_for @payment, url: {action: "create"} do |f| %>
+	<% if @payment.errors.any? %>
+		<div class="error_messages">
+		<h4><%= pluralize(@payment.errors.count, "error") %>prohibited this payment from being taken:</h4>
+		<ul>
+		<% @payment.errors.full_messages.each do |msg| %>
+			<li><%= msg %></li>
+		<% end %>
+		</div>
+	<% end %>
+	
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<%= f.hidden_field(:creation_user_stamp, :value => session[:staff_user_id]) %>
+		<%= f.hidden_field(:location_id, :value => "1") %>
+		<%= f.hidden_field(:account_id, :value => session[:account_id]) %>
+		<%= f.hidden_field(:payment_type_id, :value => "3") %>
+	
+	<div class="field">
+	<%= f.label :amount %>
+	<%= f.text_field :amount %>
+	</div>
+	<div class="field">
+	<%= label_tag :card_number, "Credit Card Number" %>
+	<%= text_field_tag :card_number, nil, name: nil %>
+	</div>
+	<div class="field">
+	<%= label_tag :card_cvc, "Security Code on Card (CVC)" %>
+	<%= text_field_tag :card_cvc, nil, name: nil %>
+	</div>
+	<div class="field">
+	<%= label_tag :card_month, "Card Expiration" %>
+	<%= select_month nil, {add_month_numbers: true}, {name: nil, id: "card_expiry_month"} %>
+	<%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_expiry_year"} %>
+	</div>
+	<div class="actions">
+	<%= f.submit "Charge Card" %>
+	</div>
+	
+<% end %>

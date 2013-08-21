@@ -1,21 +1,13 @@
-<%#= link_to("<<Back to Maintain Programs", {:action => 'edit', :controller => 'Programs', :id => params[:program_id]}, :class => 'back-link') %>
+<%= link_to("<<Back to Maintain Programs", {:action => 'edit', :controller => 'programs', :id => params[:program_id], :season_id => params[:season_id]}, :class => 'back-link') %>
 
 <div class="class session new">
-	<h2>Create New Class Session</h2>
+	<h4>Create New Class Session for <%= params[:program_name] %> - <%= params[:season_title] %></h4>
 	<%= form_for @class_session, url: {action: "create"}, html: {class: "input_form"} do |f| %>
-		<table summary="Class Session fields">
-			<tr>
-				<th>Agency Id</th>
-				<td><%= f.text_field(:agency_id) %></td>
-			</tr>
-			<tr>
-				<th>Program Id</th>
-				<td><%= f.text_field(:program_id) %></td>
-			</tr>
-			<tr>
-				<th>Season Id</th>
-				<td><%= f.select(:season_id, Season.all.collect {|s| [s.season_year, s.id]}) %></td>
-			</tr>
+		<table summary="Class Session fields" cellpadding="5">
+		<%= f.hidden_field(:agency_id) %>
+		<%= f.hidden_field(:program_id) %>
+		<%= f.hidden_field(:season_id, :value => params[:season_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
 			<tr>
 				<th>Name</th>
 				<td><%= f.text_field(:name) %></td>
@@ -26,7 +18,7 @@
 			</tr>
 			<tr>
 				<th>Session Status Id</th>
-				<td><%= f.text_field(:session_status_id) %></td>
+				<td><%= f.select(:session_status_id, [["Active", "a"], ["Inactive", "i"], ["Canceled", "c"]]) %></td>
 			</tr>
 			<tr>
 				<th>Facility Id</th>
@@ -61,16 +53,8 @@
 			</tr>
 			<tr>
 			<tr>
-				<th>Number of Bookings</th>
-				<td><%= f.text_field(:number_of_bookings) %></td>
-			</tr>
-			<tr>
-				<th>Supervisor_id</th>
+				<th>Supervisor</th>
 				<td><%= f.select(:supervisor_id, StaffUser.all.collect {|s| [s.full_name_last_first, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th>Registration Start Date</th>
-				<td><%= f.date_select(:registration_start_datetime, :order => [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
 				<th>Minimum Registrants</th>
@@ -81,28 +65,24 @@
 				<td><%= f.text_field(:maximum_registrants) %></td>
 			</tr>
 			<tr>
-				<th>Number Registered</th>
-				<td><%= f.text_field(:number_registered) %></td>
+				<th>GL Account</th>
+				<td><%= f.select(:gl_account_id, GlAccount.order("gl_account_number ASC").collect {|s| [s.number_name, s.id]}) %></td>
 			</tr>
 			<tr>
-				<th>Number Waitlisted</th>
-				<td><%= f.text_field(:number_waitlisted) %></td>
+				<th>Deferred GL Account</th>
+				<td><%= f.select(:deferred_gl_account_id, GlAccount.order("gl_account_number ASC").collect {|s| [s.number_name, s.id]}) %></td>
 			</tr>
 			<tr>
-				<th>Cancel Datetime</th>
-				<td><%= f.datetime_select(:cancel_datetime, :ampm => true) %></td>
+				<th>Registration Start Date</th>
+				<td><%= f.date_select(:registration_start_datetime, :order => [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
-				<th>Cancel Reason</th>
-				<td><%= f.text_field(:cancel_reason) %></td>
+				<th>Non-Resident Registration Start Date</th>
+				<td><%= f.date_select(:non_resident_registration_start_date, :order => [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
-				<th>GL Account Id</th>
-				<td><%= f.select(:gl_account_id, GlAccount.order("gl_account_number ASC").collect {|s| [s.numberName, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th>Deferred GL Account Id</th>
-				<td><%= f.select(:deferred_gl_account_id, GlAccount.order("gl_account_number ASC").collect {|s| [s.numberName, s.id]}) %></td>
+				<th>Member Registration Date</th>
+				<td><%= f.date_select(:member_registration_start_date, :order => [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
 				<th>Internet Display Date</th>
@@ -113,28 +93,16 @@
 				<td><%= f.date_select(:internet_display_until_date, :order => [:month, :day, :year]) %></td>
 			</tr>
 			<tr>
-				<th>Member Registration Date</th>
-				<td><%= f.date_select(:member_registration_start_date, :order => [:month, :day, :year]) %></td>
-			</tr>
-			<tr>
-				<th>Non-Resident Registration Start Date</th>
-				<td><%= f.date_select(:non_resident_registration_start_date, :order => [:month, :day, :year]) %></td>
-			</tr>
-			<tr>
-				<th>Alert text</th>
+				<th>Alert Text</th>
 				<td><%= f.text_area(:alert_text, size: "60x4") %></td>
 			</tr>
 			<tr>
-				<th>Confirmation_text</th>
+				<th>Confirmation Text</th>
 				<td><%= f.text_area(:confirmation_text, size: "60x4") %></td>
 			</tr>
 			<tr>
 				<th>Description</th>
 				<td><%= f.text_area(:description, size: "60x8") %></td>
-			</tr>
-			<tr>
-				<th>User Stamp Id</th>
-				<td><%= f.text_field(:user_stamp) %></td>
 			</tr>
 			<tr>
 				<td colspan="2"><%= f.submit "Create New Class Session" %>

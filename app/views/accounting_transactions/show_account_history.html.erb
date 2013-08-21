@@ -1,0 +1,63 @@
+<div class="account list">
+<h4>Accounting History for (<%= @account.home_area %>) <%= @account.home_phone[0..2] %>-<%= @account.home_phone[3..6] %> -- <%= @account.email %></h4>
+
+<% if params[:from] == 'registration' %>
+	<%= link_to("Back to Registration Session", :action => 'registration', :controller => 'staff_registration', :class => 'action new') %>
+<% else %>
+	<%= link_to("Back to Maintain Account", :action => 'edit', :controller => 'accounts', :id => @history.first.customer_account_id, :class => 'action new') %>
+<% end %>
+
+<table summary="Account" class="listing" cellpadding="5">
+	<tr>
+		<th>Date</th>
+		<th>Transaction Type</th>
+		<th>Transaction Details</th>
+		<th>Amount</th>
+		<th>Balance</th>
+	</tr>
+	<% balance = 0 %>
+	<% @history.each do |history| %>
+		<% case history.transaction_type_id %>
+		<% when 1 %>
+			<% registration = Registration.find(history.reference_id) %>
+			<% transaction_type = "Program Registration" %>
+			<% details = registration.customer.first_name + " " + registration.customer.last_name + ", " %>
+			<% details += registration.class_session.program.name + " - " %>
+			<% details += registration.class_session.season.season_title.title + "-" %>
+			<% details += registration.class_session.season.season_year %>
+			<% amount = history.credit %>
+			<% balance -= amount %>
+		<% when 2 %>
+			<% allocation = PaymentAllocation.find(history.reference_id) %>	
+			<% transaction_type = "Payment Made" %>
+			<% case allocation.payment.payment_type_id %>
+				<% when 1 %>
+					<% details = "Cash" %>
+				<% when 2 %>
+					<%# details = "Check #" + allocation.payment.check_number + " applied to " + allocation.registration.class_session.program.name %>
+					<% details = "Check #" + allocation.payment.check_number %>
+				<% when 3 %>
+					<% details = "Credit card" %>
+			<% end %>
+			<% amount = history.debit %>
+			<% balance += amount %>
+		<% else %>
+		
+		<% end %>
+			<tr class="history-event">
+				<td><%= history.created_at.strftime("%b %d %I:%M %p") %></td>
+				<td><%= transaction_type %></td>
+				<td><%= details %></td>
+				<td><%= number_to_currency(amount) %></td>
+				<td>
+				<% if balance < 0 %>
+					<font color="red"><%= number_to_currency(balance) %></font>
+				<% else %>
+					<%= number_to_currency(balance) %>
+				<% end %>
+				</td>
+			</tr>
+	<% end %>
+</table>
+
+</div>

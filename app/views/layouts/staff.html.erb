@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
+	<%= javascript_include_tag "https://js.stripe.com/v2/", "application" %>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "ParkNet" %></title>
     <%= csrf_meta_tags %>
+	<%= tag :meta, :name => "stripe-key", :content => STRIPE_PUBLIC_KEY %>
+
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -33,6 +38,50 @@
     <!-- For all other devices -->
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+	
+	<script type="text/javascript">
+/*	  Stripe.setPublishableKey('pk_test_ldAbOSYOYB7gnfM5iH3jsco4');
+ 
+		var stripeResponseHandler = function(status, response) {
+		var $form = $('#new_payment');
+		 
+		if (response.error) {
+		// Show the errors on the form
+		alert(response.error.message);
+		$form.find('.payment-errors').text(response.error.message);
+		$form.find('submit').prop('disabled', false);
+		} else {
+		// token contains id, last4, and card type
+		var token = response.id;
+		alert(token);
+		// Insert the token into the form so it gets submitted to the server
+		$form.append($('<input type="hidden" name="stripe_token" />').val(token));
+		// and re-submit
+		$form.get(0).submit();
+		}
+		};
+		 
+		jQuery(function($) {
+		$('#new_payment').submit(function(e) {
+		var $form = $(this);
+		//alert('gotcha');
+		 
+		// Disable the submit button to prevent repeated clicks
+		$form.find('submit').prop('disabled', true);
+
+		Stripe.card.createToken({
+			number: $('#card_number').val(),
+			cvc: $('#card_cvc').val(),
+			exp_month: $('#card_expiry_month').val(),
+			exp_year: $('#card_expiry_year').val()
+		}, stripeResponseHandler);
+		 
+		// Prevent the form from submitting with the default action
+		return false;
+		});
+		});
+*/
+	</script>
   </head>
   <body>
 
@@ -74,7 +123,7 @@
 			  <li><%= link_to("Maintain Brochure Subsections", {:controller => 'brochure_subsections', :action => 'list'}, :class => 'staff_menu_item') %></li>
 			  <li><%= link_to("Maintain Season Titles", {:controller => 'season_titles', :action => 'list'}, :class => 'staff_menu_item') %></li>
 			  <li><%= link_to("Maintain Seasons", {:controller => 'seasons', :action => 'list'}, :class => 'staff_menu_item') %></li>
-			  <li><%= link_to("Maintain Customer Accounts", {:controller => 'accounts', :action => 'show'}, :class => 'staff_menu_item') %></li>
+			  <li><%= link_to("Maintain Customer Accounts", {:controller => 'accounts', :action => 'search'}, :class => 'staff_menu_item') %></li>
 			  <li><%= link_to("Registration", {:controller => 'staff_registration', :action => 'registration'}, :class => 'staff_menu_item') %></li>
             </ul>
           </div><!--/.well -->
@@ -90,11 +139,6 @@
       </footer>
 
     </div> <!-- /container -->
-
-    <!-- Javascripts
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag "application" %>
 
   </body>
 </html>

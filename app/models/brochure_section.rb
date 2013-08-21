@@ -3,7 +3,7 @@ class BrochureSection < ActiveRecord::Base
 	has_many :brochure_subsections
 	has_many :programs
 	
-	validates :name, :agency_id, presence: true
+	validates :name, :agency_id, :user_stamp, presence: true
 	
 	attr_accessible :agency_id, :name, :active, :description, :user_stamp
 end

@@ -1,16 +1,22 @@
 <%= render(:partial => 'shared/error_messages', :locals => {:object => @account}) %>
-<%= link_to("<<Back to Account List", {:action => 'list', :account_id => @account.id}, :class => 'back-link') %>
+<% if params[:from] == 'registration' %>
+	<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+<% else %>
+	<%= link_to("<<Back to Account List", {:action => 'list', :account_id => @account.id}, :class => 'back-link') %>
+<% end %>
 
 <div class="account update">
 	<h2>Update Account</h2>
 
 <%= render 'form' %>	
 
+Current Account balance: <%= number_to_currency(@balance) %> -- <%= link_to("View Accounting History", {:action => 'show_account_history', :controller => 'accounting_transactions', :account_id => @account.id}, 
+		:class => 'add-customer-link') %>
 	<table>
 		<tr>
 		<td colspan="4"><h2>Account Members</h2> 
 		<%= link_to("Add New Account Member", {:action => 'add_member', :controller => 'customers', :account_id => @account.id, :agency_id => @account.agency_id}, 
-		:class => 'add-customer-link') %> </td>
+		:class => 'add-customer-link') %></td>
 		<td colspan="5">&nbsp;
 		</td>
 	</tr>
@@ -19,8 +25,7 @@
 	</tr>
 	<tr>
 		<th>Head Of Household</th>
-		<th>First Name</th>
-		<th>Last Name</th>
+		<th>Name</th>
 		<th>Age</th>
 		<th>Birthday</th>
 		<th>Actions</th>
@@ -30,12 +35,11 @@
 			
 			<tr>
 				<td><%= customer.head_of_household_flag == 1 ? " ✓ ":"" %></td>
-				<td><%= customer.first_name %></td>
-				<td><%= customer.last_name %></td>
+				<td><%= link_to("#{customer.first_name} #{customer.last_name}", {:action => 'edit', :controller => 'customers', :id => customer.id}, :class => 'action_edit') %></td>
 				<td><%= distance_of_time_in_words(Time.now, customer.birthdate) %></td>
 				<td><%= customer.birthdate.strftime("%b. %d, %Y") %></td>
 				<td class="actions">
-				<%= link_to("Edit", {:action => 'edit', :controller => 'customers', :id => customer.id}, :class => 'action_edit') %>
+				
 				<%= link_to("View Registrations", {:action => 'show', :controller => 'registrations', :id => customer.id}, :class => 'action_edit') %>
 				</td>
 			</tr>

@@ -1,36 +1,62 @@
+<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
 <div class="program list">
+
+<% if !@programs.first.blank? %>
 <h2>Programs Found</h2>
+	<table summary="Account" class=listing" cellpadding="4">
+		<tr>
+			<th>Program</th>
+			<th>Days of Week</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Available</th>
 
+		</tr>
+		<% @programs.each do |prog| %>
+			<% days_of_week = get_days_of_week(prog.id) %>
+			<% bookings = prog.number_registered == nil ? 0:prog.number_registered %>
+			<% available = prog.program.default_maximum_registrants - bookings %>
+			<% available = available < 0 ? 0:available %>
+				<tr class="staff_users">
+					<td>
+					<% if prog.class_session_fees(:amount) != [] %>
+						<%= link_to("#{prog.program.name} - #{prog.session_display_order}", {:action => 'registration', :id => prog.id, :previous_event => 'program_selected'}, :class => 'action_select') %>
+					<% else %>
+						<%= prog.program.name %> - <%= prog.session_display_order %> <i>(no fees defined)</i>
+					<% end %>
+					</td>
+					<td><%= days_of_week %>
+					<td><%= prog.start_date %></td>
+					<td><%= prog.end_date %></td>
+					<td><%= available %></td>
+					<td class="actions">
+					
+				</tr>
+		<% end %>
+	</table>
+	<h5>Not what you were looking for? Please search again.</h5>
+<% else %>
+	<h2>No Programs Found</h2>
+	No programs found that meet the search criteria. 
+		
+	<h5>Please search again.</h5>
+	
 
-<table summary="Account" class=listing">
-	<tr>
-		<th>Program</th>
-		<th>Days of Week</th>
-		<th>Start Date</th>
-		<th>End Date</th>
-		<th>Available</th>
+<% end %>
 
-	</tr>
-	<% @programs.each do |prog| %>
-		<% days_of_week = get_days_of_week(prog.id) %>
-		<% bookings = prog.number_of_bookings == nil ? 0:prog.number_of_bookings %>
-		<% available = prog.program.default_maximum_registrants - bookings %>
-		<% available = available < 0 ? 0:available %>
-			<tr class="staff_users">
-				<td>
-				<% if prog.class_session_fees(:amount) != [] %>
-					<%= link_to("#{prog.program.name} - #{prog.session_display_order}", {:action => 'registration', :id => prog.id, :previous_event => 'program_selected'}, :class => 'action_select') %>
-				<% else %>
-					<%= prog.program.name %> - <%= prog.session_display_order %> <i>(no fees defined)</i>
-				<% end %>
-				</td>
-				<td><%= days_of_week %>
-				<td><%= prog.start_date %></td>
-				<td><%= prog.end_date %></td>
-				<td><%= available %></td>
-				<td class="actions">
-				
+	<%= form_tag '/staff_registration/lookup_program', html: {class: "input_form"} do %>
+		<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
+		<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
+		<%= hidden_field_tag(:account_id, @account_id) %>
+		<table>
+		<tr>
+			<td>
+				<%= text_field_tag(:search_text) %> </td>
+			<td>
+				<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :selected => @season_id) %>
+			</td>
+			<td> <%= submit_tag "Search for program" %></td>
 			</tr>
+			</table>	
 	<% end %>
-</table>
 </div>

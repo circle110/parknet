@@ -1,0 +1,4 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @payment}) %>
+<%= link_to("<<Cancel payment and go back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+
+<%#= @registrations.to_yaml %>

@@ -20,7 +20,7 @@ class ClassSessionsController < ApplicationController
 	def create
 		@class_session = ClassSession.new(params[:class_session])
 		if @class_session.save
-			redirect_to(:action => 'edit', :controller => 'programs', :id => params[:program_id])
+			redirect_to(:action => 'edit', :controller => 'programs', :id => params[:class_session][:program_id], :season_id => params[:class_session.season_id])
 		else
 			render('new')
 		end		
@@ -41,7 +41,7 @@ class ClassSessionsController < ApplicationController
 		@class_session = ClassSession.find(params[:id])
 		if @class_session.update_attributes(params[:class_session])
 			flash[:notice] = "Class session edits saved."
-			redirect_to(:action => 'edit', :controller => 'programs', :id => params[:class_session][:program_id])
+			redirect_to(:action => 'edit', :controller => 'programs', :id => params[:class_session][:program_id], :season_id => params[:class_session][:season_id])
 		else
 			render('edit')
 		end	

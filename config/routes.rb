@@ -1,17 +1,16 @@
 Parknet::Application.routes.draw do
 
-  get "staff_registration/registration"
+	root :to => "staff_access#login"
 
-  get "browse_programs/show"
-
-  get "customer_access/browse"
-
-  get "customer_access/login"
+	get "staff_registration/registration"
+	get "browse_programs/show"
+	get "customer_access/browse"
+	get "customer_access/login"
 
 	get "log_in" => "staff_sessions#new", :as => "log_in"
 	get "staff_menu" => "staff_sessions#menu", :as => "staff_menu"
 	#get "customer_root" => "customer_session/menu", :as => "customer_menu"
-	root :to => "home#index"
+
 	get "static_pages/home"
 	get "static_pages/help"
 	get "facilities/list"
@@ -29,9 +28,12 @@ Parknet::Application.routes.draw do
 	get "programs/edit"
 	get "accounts/list"
 	get "accounts/edit"
+	get "accounts/search"
 	post "maintain_program" => "programs#edit", :as => "maintain_program"
 	get "class_sessions/list_per_program"
+	post "new_class_session" => "class_session#new", :as => "new_class_session"
 	get "staff_registration/lookup_account"
+	get "payments/take_payment"
 	match 'staff', :to => 'staff_access#menu'
 	get "class_sessions/edit"
 	get "customers/add_member"
@@ -52,6 +54,8 @@ Parknet::Application.routes.draw do
 	resources :accounts
 	resources :customers
 	resources :customer_access
+	resources :payments
+	resources :charges
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -3,14 +3,58 @@ class ApplicationController < ActionController::Base
   
     private 
   
-  def confirm_logged_in
-	unless session[:staff_user_id]
-		flash[:notice] = "Please log in."
-		redirect_to(:action => 'login')
-		return false # halts the before filter
-	else
-		return true
+	def confirm_logged_in
+		unless session[:staff_user_id]
+			flash[:notice] = "Please log in."
+			redirect_to(:action => 'login', :controller => 'staff_access')
+			return false # halts the before filter
+		else
+			return true
+		end
 	end
-  end
+
+	def confirm_customer_logged_in
+		unless session[:customer_user_id]
+			flash[:notice] = "Please log in."
+			redirect_to(:action => 'login', :controller => 'customer_access')
+			return false # halts the before filter
+		else
+			return true
+		end
+	end
+	
+	def current_agency
+		@current_agency ||= Agency.find(session[:agency_id])
+	end
+  
+    def find_program
+		search_text = params[:search_text]
+		@programs = current_agency.class_sessions.includes(:program).where("class_sessions.season_id = ? AND (programs.name like ? OR programs.code = ? OR programs.id = ?)", params[:season_id], "%#{search_text}%", search_text, params[:program_id]).collect
+		@seasons = Season.find(:all)
+	end
+	
+	
+	def find_account
+		if params[:account_id]
+			@customers = Customer.includes(:account).where("accounts.id = ?", params[:account_id])
+		else
+			search_text = params[:search_text] 
+			if search_text.respond_to?(:to_str)
+				last_name = search_text
+			else
+				last_name = ""
+			end
+			if search_text.match /^\d+(?:-\d+)*$/
+				phone = search_text
+				phone = phone.sub!(/-/, '')
+				phone = phone.sub!(/./, '')
+				#phone = phone.sub!(/(/, '')
+				#phone = phone.sub!(/)/, '')
+			else
+				phone = ""
+			end
+			@customers = current_agency.customers.includes(:account).where("customers.last_name like ? OR accounts.home_phone = ?", "%#{last_name}%", phone).order("account_id", "last_name", "first_name")
+		end	
+	end
   
 end

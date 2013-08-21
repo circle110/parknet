@@ -1,30 +1,9 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @gl_account}) %>
 <%= link_to("<<Back to Gl Account List", {:action => 'list'}, :class => 'back-link') %>
 
 <div class="gl account edit">
 	<h2>Edit Gl Account</h2>
-	<%= form_for @gl_account, url: {action: "update"}, html: {class: "input_form"} do |f| %>
-		<table summary="Gl Account fields">
-			<tr>
-				<th>Fund</th>
-				<td><%= f.select(:fund_id, Fund.all.collect {|s| [s.number_name, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th>Name</th>
-				<td><%= f.text_field(:name) %></td>
-			</tr>			
-			<tr>
-				<th>Gl Account Number</th>
-				<td><%= f.text_field(:gl_account_number) %></td>
-			</tr>
-			<tr>
-				<th>active</th>
-				<td><%= f.check_box(:active) %></td>
-			</tr>
-			<tr>
-				<td colspan="2"><%= f.submit "Post Gl Account Edits" %>
-				</td>
-			</tr>
-		</ table>
+	
+<%= render 'form' %>
 
-	<% end %>
 </ div>	

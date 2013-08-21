@@ -1,115 +1,27 @@
-
 <%= link_to("<<Back to Program List", {:action => 'list'}, :class => 'back-link') %>
 
 <%= render(:partial => 'shared/error_messages', :locals => {:object => @program}) %>
 
 <div class="program edit">
 	<h2>Edit <%= @program.name %></h2>
-	<%= form_for @program, url: {controller: "programs", action: "update"}, html: {class: "input_form"} do |f| %>
-		<table summary="Program fields">
-			<tr>
-				<th><%= f.label :name %></th>
-				<td><%= f.text_field(:name) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :code %></th>
-				<td><%= f.text_field(:code, size: "8") %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :brochure_section_id %></th>
-				<td><%= f.select(:brochure_section_id, BrochureSection.all.collect {|s| [s.name, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :brochure_subsection_id %></th>
-				<td><%= f.select(:brochure_subsection_id, BrochureSubsection.all.collect {|s| [s.name, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :min_age %></th>
-				<td><%= f.text_field(:min_age, size: "3") %><%= f.select(:min_age_type, options_for_select([["Years", "Y"], ["Months", "M"]])) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :max_age %></th>
-				<td><%= f.text_field(:max_age, size: "3") %><%= f.select(:max_age_type, options_for_select([["Years", "Y"], ["Months", "M"]])) %></td>
-			</tr>	
-			<tr>
-				<th><%= f.label :default_minimum_registrants %></th>
-				<td><%= f.text_field(:default_minimum_registrants, size: "3") %></td>
-			</tr>	
-			<tr>
-				<th><%= f.label :default_maximum_registrants %></th>
-				<td><%= f.text_field(:default_maximum_registrants, size: "3") %></td>
-			</tr>	
 
-			<tr>
-				<th><%= f.label :deferred_gl_account_id %></th>
-				<td><%= f.select(:deferred_gl_account_id, GlAccount.all.collect {|s| [s.number_name, s.id]}) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :photo %></th>
-				<td><%= f.file_field(:photo) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :scheduled_payments_allowed_flag %></th>
-				<td><%= f.check_box(:scheduled_payments_allowed_flag) %></td>
-			</tr>				
-			<tr>
-				<th><%= f.label :internet_query_flag %></th>
-				<td><%= f.check_box(:internet_query_flag) %></td>
-			</tr>	
-			<tr>
-				<th><%= f.label :daycare_flag %></th>
-				<td><%= f.check_box(:daycare_flag) %></td>
-			</tr>	
-			<tr>
-				<th><%= f.label :internet_registration_flag %></th>
-				<td><%= f.check_box(:internet_registration_flag) %></td>
-			</tr>	
-			<tr>
-			<tr>
-				<th><%= f.label :include_in_tax_receipt_flag %></th>
-				<td><%= f.check_box(:include_in_tax_receipt_flag) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :active %></th>
-				<td><%= f.check_box(:active) %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :alert_text %></th>
-				<td><%= f.text_area(:alert_text, size: "40x2") %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :confirmation_text %></th>
-				<td><%= f.text_area(:confirmation_text, size: "40x2") %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :description %></th>
-				<td><%= f.text_area(:description, size: "40x6") %></td>
-			</tr>
-			<tr>
-				<td colspan="2"><%= f.submit "Post Program Edits" %>
-				</td>
-			</tr>
-		</ table>
-	<% end %>
+	<%= render 'form' %>
 
 
-
-<table summary="Class Sesssions" class="listing">
+<%= form_tag(maintain_program_path, :method => 'post') do %>
+<%= hidden_field_tag 'id', "#{@program.id}" %>
+<table summary="Class Sesssions" class="listing" cellpadding="4">
 	<tr>
-		<td colspan="4"><h2>Class Sessions</h2> 
-		<%= link_to("Add New Class Session", {:action => 'new', :controller => 'class_sessions', :program_id => @program.id, :agency_id => @program.agency_id}, 
-		:class => 'add-class-link') %> </td>
+		<td colspan="3"><h2>Class Sessions</h2> 
+		<% season = @this_season.season_title.title + " " + @this_season.season_year %>
+		<%= link_to("Add New Class Session", {:action => 'new', :controller => 'class_sessions', :program_id => @program.id, 
+		:agency_id => @program.agency_id, :season_id => @season_id, :program_name => @program.name, :season_title => season}, :class => 'add-class-link') %> </td>
 		<td colspan="5">
-		<%= form_tag(maintain_program_path, :method => 'post') do %>
-			<%= hidden_field_tag 'id', "#{@program.id}" %>
-			<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}), { :onchange => "this.form.submit();" } %>
+			<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :selected => @season_id), { :onchange => "this.form.submit();" } %>
 		<% end %>
-
 		</td>
 	</tr>
-		<tr>
-
-	</tr>
+<% if !@class_sessions.blank? %>
 	<tr>
 		<th>Class Num.</th>
 		<th>Status</th>
@@ -120,8 +32,12 @@
 		<th>Days of Week</th>
 		<th>Actions</th>
 	</tr>
-		
-		<% @program.class_sessions.each do |session| %>
+<% else %>
+	<tr>
+	<td colspan="8">No class sessions have been defined for this season. Click "add new session" above to add new sessions.</td>
+	<tr>
+<% end %>		
+		<% @class_sessions.each do |session| %>
 			<% days_of_week = get_days_of_week(session.id) %>
 			
 			<tr>

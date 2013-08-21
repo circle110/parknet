@@ -1,0 +1,59 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @payment}) %>
+<%= link_to("<<Cancel payment and go back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+
+<h4>Take Payment for Account (<%= @account.home_area %>)<%= @account.home_phone[0..2] %>-<%= @account.home_phone[3..6] %> || <%= @account.email %></h4>
+<strong>Current Account Balance: <%= number_to_currency(@balance) %></strong><p>
+		<%= form_for @payment, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<%= f.hidden_field(:creation_user_stamp, :value => session[:staff_user_id]) %>
+		<%= f.hidden_field(:location_id, :value => 2) %>
+		<%= f.hidden_field(:account_id, :value => @account.id) %>
+		
+		<ul>
+			<li class="field">
+				<%= f.label :payment_type_id, 'Payment_type' %> 
+				<%= f.select(:payment_type_id, ([["Cash", "1"], ["Check", "2"], ["Credit Card", "3"]]), prompt: "--Select Payment Type--") %>
+			</li>
+			<li class="field">
+				<%= f.label :amount, 'Payment Amount' %>
+				<%= f.text_field(:amount) %>
+			</li>
+			<li class="field">
+				<%= f.label :check_number, 'Check Number' %>
+				<%= f.text_field(:check_number) %>
+			</li>
+
+	<%#= @registrations.to_yaml %>
+
+		<% i = 0 %>
+		<%= f.fields_for :payment_allocations do |builder| %>
+			
+			<%= builder.hidden_field :agency_id, :value => session[:agency_id] %>
+			<%= builder.hidden_field :user_stamp, :value => session[:staff_user_id] %>
+			<%= builder.hidden_field :reference_id, :value => @registrations[i][:id] %>
+			<%= builder.hidden_field :allocation_type, :value => "r" %>
+			<%= builder.hidden_field :class_session_id, :value => @registrations[i][:class_session_id] %>
+			<%= builder.hidden_field :customer_id, :value => @registrations[i][:customer_id] %>
+			
+			<% unpaid_balance = number_to_currency(@registrations[i].unpaid_balance) %>
+			<li class="field">
+				<%= builder.label :amount, "Allocation Amount -- #{@registrations[i].customer.first_name} #{@registrations[i].customer.last_name} #{@registrations[i].class_session.program.name} #{@registrations[i].class_session.season.season_title.title} #{@registrations[i].class_session.season.season_year} #{unpaid_balance}" %>
+				<%= builder.text_field :amount, :value => @registrations[i].unpaid_balance %>
+			</li>
+
+			<% i += 1 %>
+		<% end %>
+				<li class="field">
+				<%= f.submit "Submit Payment" %>
+			</li>
+		</ul>
+	<% end %>
+
+
+
+<script type="text/javascript">
+  // This identifies your website in the createToken call below
+  Stripe.setPublishableKey(STRIPE_PUBLIC_KEY);
+  // ...
+</script>

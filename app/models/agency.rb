@@ -19,6 +19,8 @@ class Agency < ActiveRecord::Base
 	has_many :season_titles
 	has_many :staff_users
 	has_many :staff_supervisors
+	has_many :registrations
+	has_many :payments
 	
   # attr_accessible :title, :body
 end

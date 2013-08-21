@@ -23,12 +23,17 @@ class Account < ActiveRecord::Base
 	
 	before_save :create_hashed_password
 	before_save :pwd
+	before_save :strip_phone
 	
 	after_save :clear_password
 	
 	attr_accessible :agency_id, :account_status_id, :email, :hashed_password, :salt, :barcode_number, :address, :address_2, :city_id, :state, :zip, :home_area, 
-	:home_phone, :resident_flag, :current_balance, :future_balance, :unallocated_balance, :email_private, :alert_text, :user_stamp, :password, :password_confirmation
+	:home_phone, :resident_flag, :future_balance, :unallocated_balance, :email_private, :alert_text, :user_stamp, :password, :password_confirmation
 	
+	def strip_phone
+		self.home_phone.sub!(/-/, '')
+		self.home_phone.sub!(/\./, '')
+	end 
 	
 	def pwd
 		@pwd = password

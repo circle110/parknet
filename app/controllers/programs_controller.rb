@@ -5,8 +5,7 @@ class ProgramsController < ApplicationController
 	before_filter :confirm_logged_in
 
 	def list
-		@agency = Agency.find(session[:agency_id])
-		@programs = Program.where("agency_id = #{session[:agency_id]}").order("programs.id ASC")
+		@programs = current_agency.programs.find(:all)
 	end
 	
 	def show
@@ -18,7 +17,7 @@ class ProgramsController < ApplicationController
 	end
 	
 	def new	
-		@program = Program.new
+		@program = current_agency.programs.new
 	end
 	
 	def create
@@ -33,18 +32,25 @@ class ProgramsController < ApplicationController
 	end
 
 	def edit
+		if params[:season_id] 
+			season_id = params[:season_id]
+		else
+			#season_id = session[:current_working_season] -- Got to deal on this
+			season_id = 1
+		end
 		@program = Program.find(params[:id])
-		@agency_id = session[:agency_id]
-		@this_season = params[:season_id]
-		@seasons = Season.find(:all,
+		@class_sessions = ClassSession.where("program_id = ? and season_id = ?", params[:id], season_id)
+		@season_id = season_id
+		@seasons = current_agency.seasons.find(:all,
 							:joins => [:season_title],
 							:order => 'seasons.default_registration_start_date ASC')
+		@this_season = Season.find(season_id)
 	end
 	
 	
 	def update
 		@program = Program.find(params[:id])
-		@seasons = Season.find(:all,
+		@seasons = current_agency.seasons.find(:all,
 							:joins => [:season_title],
 							:order => 'seasons.default_registration_start_date ASC')
 		if @program.update_attributes(params[:program])

@@ -1,44 +1,21 @@
+<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
 <div class="account list">
 
 
-<% if @accounts.count != 0 %>
-<h2>Accounts Found</h2>
-<%= link_to("Add New Account", :action => 'new', :class => 'action new') %>
-<table summary="Account" class=listing">
-	<tr>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Address</th>
-		<th>City</th>
-		<th>Actions</th>
-	</tr>
-	<% @accounts.each do |cust| %>
-			<tr class="staff_users">
-				<td><%= cust.first_name %></td>
-				<td><%= cust.last_name %></td>
-				<td><%= cust.account.address %></td>
-				<td><%= cust.city.name %></td>
-				<td class="actions">
-				<%= link_to("Select", {:action => 'registration', :id => cust.account.id, :previous_event => 'account_selected', :class_session_id => @class_session_id}, :class => 'action_select') %>
-			</tr>
-	<% end %>
-</table>
+<% if @customers.count != 0 %>
+	<h3>Matching Accounts Found</h3>
+	<%= render 'shared/customer_search_results' %>
+	<p>
+	------------------------------------------------------------------------------------------<p>
+
+	Search for a different account:<br>
 <% else %>
-<p>
-No matching accounts found. <br>
-Please search again:<br>
-		<%= form_tag '/staff_registration/lookup_account', html: {class: "input_form"} do %>
-			<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
-			<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
-			<%= hidden_field_tag(:account_search, 1) %>
-			<%= hidden_field_tag(:class_session_id, @class_session_id ) %>
-
-
-			<%= text_field_tag(:search_text) %> <%= submit_tag "Search for account" %></td>
-
-		<% end %>
-		
-		Or<br>
-<%= link_to("Add New Account", :action => 'new', :class => 'action new') %> 
+	<p>
+	No matching accounts found. <br>
+	Please search again:<br>
 <% end %>
+
+<%= render 'shared/account_search_form' %>
+<%= render 'shared/search_instructions' %>	
+
 </div>

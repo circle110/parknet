@@ -5,7 +5,7 @@ class FundsController < ApplicationController
 	before_filter :confirm_logged_in
 
 	def list
-		@funds = Fund.order("funds.id ASC")
+		@funds = current_agency.funds.order("funds.fund ASC")
 	end
 	
 	def edit
@@ -13,12 +13,13 @@ class FundsController < ApplicationController
 	end
 	
 	def new	
-		@fund = Fund.new
+		@fund = current_agency.funds.new
+		5.times {@fund.gl_accounts.build}
 	end
 	
 	def create
-		@fund = Fund.new(params[:fund])
-		if @fund.save
+		@fund = current_agency.funds.new(params[:fund])
+		if @fund.save		
 			redirect_to(:action => 'list')
 		else
 			render('new')

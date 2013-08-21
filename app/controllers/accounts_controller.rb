@@ -5,27 +5,7 @@ class AccountsController < ApplicationController
 	before_filter :confirm_logged_in
 
 	def list
-		@class_session_id = params[:class_session_id]
-		if params[:account_id]
-			@customers = Customer.includes(:account, :city).where("accounts.id = ?", params[:account_id])
-		else
-			search_text = params[:search_text] 
-			if search_text.respond_to?(:to_str)
-				last_name = search_text
-			else
-				last_name = ""
-			end
-			if search_text.match /^\d+(?:-\d+)*$/
-				phone = search_text
-				phone = phone.sub!(/-/, '')
-				#phone = phone.sub!(/./, '')
-				#phone = phone.sub!(/(/, '')
-				#phone = phone.sub!(/)/, '')
-			else
-				phone = ""
-			end
-			@customers = Customer.includes(:account, :city).where("customers.agency_id = ? AND (customers.last_name = ? OR accounts.home_phone = ?)", session[:agency_id], last_name, phone)
-		end
+		find_account
 	end
 	
 	def new
@@ -38,12 +18,14 @@ class AccountsController < ApplicationController
 			@customer = Customer.new
 			redirect_to(:action => 'add_head_of_household', :controller => 'customers', :account_id => @account.id)
 		else
+			flash[:notice] = "Account creation failed."
 			render('new')
 		end		
 	end
 	
 	def edit
 		@account = Account.find(params[:id])
+		@balance = Customer.where("account_id = ?", session[:account_id]).sum(:current_account_balance)
 	end
 	
 	def update

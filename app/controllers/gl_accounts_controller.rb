@@ -5,7 +5,7 @@ class GlAccountsController < ApplicationController
 	before_filter :confirm_logged_in
 
 	def list
-		@gl_accounts = GlAccount.order("gl_accounts.gl_account_number ASC")
+		@gl_accounts = current_agency.gl_accounts.includes(:fund).order("funds.fund ASC", "gl_account_number ASC")
 	end
 	
 	def show
@@ -13,12 +13,12 @@ class GlAccountsController < ApplicationController
 	end
 	
 	def new	
-		@gl_account = GlAccount.new
+		@gl_account = current_agency.gl_accounts.new
 	end
 
 	
 	def create
-		@gl_account = GlAccount.new(params[:gl_account])
+		@gl_account = current_agency.gl_accounts.new(params[:gl_account])
 		if @gl_account.save
 			redirect_to(:action => 'list')
 		else
