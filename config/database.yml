@@ -37,6 +37,6 @@ production:
   reconnect: false
   database: parks_production
   pool: 5
-  username: parks
-  password: mingus
-  host: 127.0.0.1
+  username: 
+  password: 
+  host: 

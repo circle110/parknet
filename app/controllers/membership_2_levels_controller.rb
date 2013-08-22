@@ -1,0 +1,2 @@
+class Membership2LevelsController < ApplicationController
+end

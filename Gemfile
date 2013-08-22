@@ -14,6 +14,7 @@ gem 'coffee-rails', '3.2.2'
 gem "therubyracer"
 gem "less-rails"
 gem 'twitter-bootstrap-rails'
+gem 'heroku'
 
 group :development, :test do
   gem 'mysql2'

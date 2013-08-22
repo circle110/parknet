@@ -1,4 +1,4 @@
-class lookups < ApplicationController
+class LookupsController < ApplicationController
   protect_from_forgery
   
 	def lookup_account
