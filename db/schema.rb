@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
   end
 
 
+
   create_table "accounts", :force => true do |t|
     t.integer  "agency_id",                                                                          :null => false
     t.string   "account_status_id",   :limit => 1,                                  :default => "a", :null => false
@@ -85,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end
+
 
 
   create_table "agencies", :force => true do |t|
@@ -129,6 +131,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
   end
 
 
+
   create_table "cities", :force => true do |t|
     t.integer  "agency_id",                :null => false
     t.string   "name",       :limit => 45
@@ -137,6 +140,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end
+
 
 
   create_table "class_session_fees", :force => true do |t|
@@ -198,6 +202,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",                                         :null => false
     t.datetime "updated_at",                                         :null => false
   end
+
 
 
   create_table "customers", :force => true do |t|
@@ -269,6 +274,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
   end
 
 
+
   create_table "facility_types", :force => true do |t|
     t.integer  "agency_id",                :null => false
     t.string   "name",       :limit => 75
@@ -287,6 +293,7 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
   end
+
 
 
   create_table "gl_accounts", :force => true do |t|
@@ -311,7 +318,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.integer  "age_based",       :limit => 1, :null => false
     t.integer  "minimum_age",                  :null => false
     t.integer  "maximum_age",                  :null => false
-    t.integer  "subscription",    :limit => 1, :null => false
     t.integer  "active",          :limit => 1, :null => false
     t.integer  "user_stamp",                   :null => false
     t.datetime "created_at",                   :null => false
@@ -328,7 +334,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.integer  "age_based",       :limit => 1, :null => false
     t.integer  "minimum_age",                  :null => false
     t.integer  "maximum_age",                  :null => false
-    t.integer  "subscription",    :limit => 1, :null => false
     t.integer  "active",          :limit => 1, :null => false
     t.integer  "user_stamp",                   :null => false
     t.datetime "created_at",                   :null => false
@@ -345,7 +350,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.integer  "age_based",       :limit => 1, :null => false
     t.integer  "minimum_age",                  :null => false
     t.integer  "maximum_age",                  :null => false
-    t.integer  "subscription",    :limit => 1, :null => false
     t.integer  "active",          :limit => 1, :null => false
     t.integer  "user_stamp",                   :null => false
     t.datetime "created_at",                   :null => false
@@ -368,8 +372,8 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.integer  "agency_id",                       :null => false
     t.string   "name",                            :null => false
     t.integer  "level_1_id",                      :null => false
-    t.integer  "level_2_id",                      :null => false
-    t.integer  "level_3_id",                      :null => false
+    t.integer  "level_2_id"
+    t.integer  "level_3_id"
     t.integer  "membership_term_id"
     t.integer  "subscription_flag",  :limit => 1
     t.integer  "active",             :limit => 1, :null => false
@@ -405,7 +409,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",                        :null => false
     t.datetime "updated_at",                        :null => false
   end
-
 
 
   create_table "programs", :force => true do |t|
@@ -505,7 +508,6 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "updated_at",    :null => false
   end
 
-
   create_table "staff_users", :force => true do |t|
     t.integer  "agency_id",                                    :null => false
     t.string   "first_name",      :limit => 40
@@ -519,6 +521,5 @@ ActiveRecord::Schema.define(:version => 20130622224516) do
     t.datetime "created_at",                                   :null => false
     t.datetime "updated_at",                                   :null => false
   end
-
 
 end
