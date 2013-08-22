@@ -15,6 +15,7 @@ gem "therubyracer"
 gem "less-rails"
 gem 'twitter-bootstrap-rails'
 gem 'heroku'
+gem 'yaml_db'
 
 group :development, :test do
   gem 'mysql2'
