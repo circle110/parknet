@@ -32,7 +32,7 @@ test:
   host: 127.0.0.1
 
 production:
-  adapter: pg
+  adapter: postgresql
   encoding: utf8
   reconnect: false
   database: parks_production
