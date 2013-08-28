@@ -21,6 +21,10 @@ class Agency < ActiveRecord::Base
 	has_many :staff_supervisors
 	has_many :registrations
 	has_many :payments
+	has_many :payment_allocations, through: :payments
+	has_many :registration_baskets
+	has_many :registration_basket_line_items
+	has_many :refunds
 	
   # attr_accessible :title, :body
 end

@@ -35,7 +35,7 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body>
-
+<% agency = Agency.find(session[:agency_id]) %>
     <div class="navbar navbar-fluid-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">ParkNet Online Brochure - <%= session[:agency_name] %></a>
+          <a class="brand" href="#">ParkNet Online Brochure - <%= agency.name %></a>
           <div class="container-fluid nav-collapse">
 
           </div><!--/.nav-collapse -->
@@ -57,28 +57,27 @@
         <div class="span3">
           <div class="well sidebar-nav">
        	<ul class="nav">
-	<% @brochure_sections = BrochureSection.all %>
-	<% @brochure_sections.each do |brochure_section| %>
+		
 	
-				<li><%= brochure_section.name %></li>
-				<% subsections = BrochureSubsection.where("brochure_section_id = ?", brochure_section.id) %>
-				<% if subsections %>
-					<ul>
-					<% subsections.each do |subsection| %>
-						<li><%= subsection.name %></li>
-						<% programs = Program.where("brochure_subsection_id = ?", subsection.id) %>
-						<% if programs %>
-							<ul>
-							<% programs.each do |program| %>
+	<% @brochure_sections = BrochureSection.includes(:class_sessions).where("class_sessions.agency_id = ? AND class_sessions.season_id = ?", session[:agency_id], agency.current_online_season_id) %>
+	<% @brochure_sections.each do |brochure_section| %>
+		<% if brochure_section.programs.count > 0 %>
+			<li><%= brochure_section.name %></li>		
+				<ul>
+				<% brochure_section.brochure_subsections.each do |subsection| %>
+					<% if subsection.programs.count > 0 %>
+					<li><%= subsection.name %></li>
+						<ul>
+						<% subsection.programs.each do |program| %>
+							<% if program.class_sessions.count > 0 %>
 								<li><%= link_to(program.name, {:action => 'show', :id => program.id}, :class => 'action_browse') %></li>
 							<% end %>
-							</ul>
 						<% end %>
+						</ul>
 					<% end %>
-					</ul>
 				<% end %>
-
-
+				</ul>
+		<% end %>
 	<% end %>
 	</ul>
           </div><!--/.well -->

@@ -4,6 +4,7 @@ class Customer < ActiveRecord::Base
 	has_one :address
 	has_one :staff_user
 	has_one :city, through: :account
+	has_many :accounting_transactions
 
 	
 	attr_accessible :agency_id, :account_id, :first_name, :last_name, :head_of_household_flag, :email, :status_id, :birthdate, :head_of_household_flag, 

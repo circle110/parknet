@@ -2,14 +2,14 @@ class PaymentAllocation < ActiveRecord::Base
 	belongs_to :agency
 	has_one :accounting_transaction, as: :reference 
 	belongs_to :payment
-	belongs_to :registration
+	belongs_to :reference, polymorphic: true
 
 	attr_accessor :class_session_id
 	attr_accessor :customer_id
 	
 	validates :agency_id, :allocation_type, :reference_id, :user_stamp, :amount, :presence => true
 	
-	attr_accessible :agency_id, :payment_id, :reference_id, :allocation_type, :user_stamp, :amount, :class_session_id, :customer_id
+	attr_accessible :agency_id, :payment_id, :reference_id, :allocation_type, :user_stamp, :amount, :class_session_id, :customer_id, :creation_user_stamp
   
   	after_save :create_accounting_transaction
 	after_save :update_customer_account_balance

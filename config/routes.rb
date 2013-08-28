@@ -5,12 +5,18 @@ Parknet::Application.routes.draw do
 	get "staff_registration/registration"
 	get "browse_programs/show"
 	get "customer_access/browse"
-	get "customer_access/login"
-
+	match 'customer/login', :to => 'customer_access#login'
+	match ':controller(/:action(/:agency_id(/:id)))(.:format)'
 	get "log_in" => "staff_sessions#new", :as => "log_in"
 	get "staff_menu" => "staff_sessions#menu", :as => "staff_menu"
-	#get "customer_root" => "customer_session/menu", :as => "customer_menu"
-
+	#get "customer_menu" => "customer_access#menu", :as => "customer_menu"
+	get "customer_access/menu"
+	get "customer_access/logout"
+	get "online_registration/view_basket"
+	get "online_registration/waiver"
+	get "online_registration/checkout"
+	get "online_registration/take_payment"
+	get "online_registration/no_payment"
 	get "static_pages/home"
 	get "static_pages/help"
 	get "facilities/list"
@@ -35,9 +41,11 @@ Parknet::Application.routes.draw do
 	get "staff_registration/lookup_account"
 	get "payments/take_payment"
 	match 'staff', :to => 'staff_access#menu'
+	match 'customer', :to => 'customer_access#menu'
 	get "class_sessions/edit"
 	get "customers/add_member"
 	get "customers/add_head_of_household"
+	get "online_registration/show"
 	#get "facilities/new"
 	resources :facilities
 	resources :funds
@@ -56,6 +64,8 @@ Parknet::Application.routes.draw do
 	resources :customer_access
 	resources :payments
 	resources :charges
+	resources :online_registration
+	resources :refunds
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

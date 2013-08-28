@@ -2,6 +2,17 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
     private 
+	
+	before_filter :set_locale
+	 
+	def set_locale
+	  I18n.locale = extract_locale_from_subdomain || I18n.default_locale
+	end
+	
+	def extract_locale_from_subdomain
+		parsed_locale = request.subdomains.first
+		I18n.available_locales.include?(parsed_locale.to_sym) ? parsed_locale : nil
+	end
   
 	def confirm_logged_in
 		unless session[:staff_user_id]
@@ -14,7 +25,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def confirm_customer_logged_in
-		unless session[:customer_user_id]
+		unless session[:customer_account_id]
 			flash[:notice] = "Please log in."
 			redirect_to(:action => 'login', :controller => 'customer_access')
 			return false # halts the before filter
@@ -26,6 +37,7 @@ class ApplicationController < ActionController::Base
 	def current_agency
 		@current_agency ||= Agency.find(session[:agency_id])
 	end
+	
   
     def find_program
 		search_text = params[:search_text]

@@ -1,7 +1,7 @@
 class Program < ActiveRecord::Base
 	belongs_to :agency
 	belongs_to :brochure_section
-	has_one :brochure_subsection 
+	belongs_to :brochure_subsection 
 	has_many :class_sessions
 	has_many :class_session_fees, through: :class_sessions
 	has_many :registrations, through: :class_sessions

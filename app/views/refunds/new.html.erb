@@ -1,0 +1,25 @@
+<h4>Request Refund for Account <%= @account.email %> || (<%= @account.home_area %>)<%= @account.home_phone[0..2] %>-<%= @account.home_phone[3..6] %></h4>
+Total Account Balance: <%= number_to_currency(@balance) %>
+<br>
+<h5>Items Available for Refunding</h5>
+<%= form_for @refund do |f| %>
+	<% @withdrawals.each do |w| %>
+		<% registration = Registration.find(w.reference_id) %>
+		<%= w.customer.first_name %> <%= w.customer.last_name %> - <%= registration.class_session.program.name %> <%= registration.class_session.season.season_title.title %> <%= registration.class_session.season.season_year %> -- <%= number_to_currency(w.debit) %>
+		<% payment_type = registration.payment_allocations.first.payment.payment_type_id %>
+		<% case payment_type %>
+			<% when 1 %>
+				<% payment_name = "Cash" %>
+			<% when 2 %>
+				<% payment_name = "Check" %>
+			<% when 3 %>
+				<% payment_name = "Credit Card" %>
+		<% end %>
+		| Paid by: <%= payment_name %>
+		<br>Amount to be refunded:
+	<%= f.text_field(:amount, :value => w.debit) %>
+		
+	<% end %>
+<br>
+<%= f.submit "Request Refund" %>
+<% end %>

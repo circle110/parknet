@@ -1,0 +1,10 @@
+<% @page_title = "Customer Menu" %>
+
+<div class="menu">
+	<h2>Customer Menu</h2>
+	<div class="identity">Logged in as: <%= session[:email] %> - <%= session[:agency_name] %></div>
+	
+	<%= link_to("Logout", :action => 'logout') %>
+	</div>
+
+	

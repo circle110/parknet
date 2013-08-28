@@ -2,7 +2,7 @@
 <%= link_to("<<Back to Edit Program ", {:action => 'edit', :controller => 'programs', :id => @class_session.program_id}, :class => 'back-link') %>
 
 <div class="class session edit">
-	<h2>Edit Class Session</h2>
+	<h3>Edit Class Session for <%= @class_session.program.name %> <%= @class_session.season.season_title.title %> <%= @class_session.season.season_year %></h3>
 	<%= form_for @class_session, url: {action: "update"}, html: {class: "input_form"} do |f| %>
 	<%= f.hidden_field(:program_id) %>
 	<%= f.hidden_field(:season_id) %>

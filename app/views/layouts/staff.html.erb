@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
 
-	<%#= javascript_include_tag 'https://js.stripe.com/v2/', 'application' %>
+	<%= javascript_include_tag "https://js.stripe.com/v2/", "application" %>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
@@ -39,49 +39,7 @@
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 	
-	<script type="text/javascript">
-/*	  Stripe.setPublishableKey('pk_test_ldAbOSYOYB7gnfM5iH3jsco4');
- 
-		var stripeResponseHandler = function(status, response) {
-		var $form = $('#new_payment');
-		 
-		if (response.error) {
-		// Show the errors on the form
-		alert(response.error.message);
-		$form.find('.payment-errors').text(response.error.message);
-		$form.find('submit').prop('disabled', false);
-		} else {
-		// token contains id, last4, and card type
-		var token = response.id;
-		alert(token);
-		// Insert the token into the form so it gets submitted to the server
-		$form.append($('<input type="hidden" name="stripe_token" />').val(token));
-		// and re-submit
-		$form.get(0).submit();
-		}
-		};
-		 
-		jQuery(function($) {
-		$('#new_payment').submit(function(e) {
-		var $form = $(this);
-		//alert('gotcha');
-		 
-		// Disable the submit button to prevent repeated clicks
-		$form.find('submit').prop('disabled', true);
 
-		Stripe.card.createToken({
-			number: $('#card_number').val(),
-			cvc: $('#card_cvc').val(),
-			exp_month: $('#card_expiry_month').val(),
-			exp_year: $('#card_expiry_year').val()
-		}, stripeResponseHandler);
-		 
-		// Prevent the form from submitting with the default action
-		return false;
-		});
-		});
-*/
-	</script>
   </head>
   <body>
 

@@ -7,6 +7,7 @@
 	<%= link_to("Back to Maintain Account", :action => 'edit', :controller => 'accounts', :id => @history.first.customer_account_id, :class => 'action new') %>
 <% end %>
 
+<% if @history.count > 0 %>
 <table summary="Account" class="listing" cellpadding="5">
 	<tr>
 		<th>Date</th>
@@ -41,6 +42,15 @@
 			<% end %>
 			<% amount = history.debit %>
 			<% balance += amount %>
+		<% when 3 %>
+			<% registration = Registration.find(history.reference_id) %>
+			<% transaction_type = "Withdraw from Program" %>
+			<% details = registration.customer.first_name + " " + registration.customer.last_name + ", " %>
+			<% details += registration.class_session.program.name + " - " %>
+			<% details += registration.class_session.season.season_title.title + "-" %>
+			<% details += registration.class_session.season.season_year %>
+			<% amount = history.credit %>
+			<% balance += amount %>
 		<% else %>
 		
 		<% end %>
@@ -59,5 +69,7 @@
 			</tr>
 	<% end %>
 </table>
-
+<% else %>
+	<p>No accounting history found.
+<% end %>
 </div>

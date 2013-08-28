@@ -35,7 +35,7 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
   </head>
   <body>
-
+<% account = Account.find(session[:customer_account_id]) %>
     <div class="navbar navbar-fluid-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -46,7 +46,13 @@
           </a>
           <a class="brand" href="#">ParkNet Online Brochure - <%= session[:agency_name] %></a>
           <div class="container-fluid nav-collapse">
-
+			  <ul class="nav">
+				<li><a href="#">Logged in as (<%= account.home_area %>)<%= account.home_phone[0..2] %>-<%= account.home_phone[3..6] %> || <%= account.email %></a></li>
+				<li><%= link_to("My Account", {:controller => 'customer_access', :action => 'my_account'}, :class => 'customer_menu_item') %></li>
+				<li><%= link_to("View Basket", {:controller => 'online_registration', :action => 'view_basket'}, :class => 'customer_menu_item') %></li>
+				<li><%= link_to("Logout", :controller => 'customer_access', :action => 'logout') %></li>
+				<li><%= link_to("Español", "#{ESPANOL_WEBSITE_URL}#{request.env['REQUEST_URI']}") %></li>
+			  </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -57,28 +63,26 @@
         <div class="span3">
           <div class="well sidebar-nav">
        	<ul class="nav">
-	<% @brochure_sections = BrochureSection.all %>
+	<% agency = Agency.find(session[:agency_id]) %>
+	<% @brochure_sections = BrochureSection.includes(:programs, :class_sessions).where("class_sessions.agency_id = ? AND class_sessions.season_id = ?", session[:agency_id], agency.current_online_season_id) %>
 	<% @brochure_sections.each do |brochure_section| %>
-	
-				<li><%= brochure_section.name %></li>
-				<% subsections = BrochureSubsection.where("brochure_section_id = ?", brochure_section.id) %>
-				<% if subsections %>
-					<ul>
-					<% subsections.each do |subsection| %>
-						<li><%= subsection.name %></li>
-						<% programs = Program.where("brochure_subsection_id = ?", subsection.id) %>
-						<% if programs %>
-							<ul>
-							<% programs.each do |program| %>
-								<li><%= link_to(program.name, {:action => 'show', :id => program.id}, :class => 'action_browse') %></li>
+		<% if brochure_section.programs.count > 0 %>
+			<li><%= brochure_section.name %></li>		
+				<ul>
+				<% brochure_section.brochure_subsections.each do |subsection| %>
+					<% if subsection.programs.count > 0 %>
+					<li><%= subsection.name %></li>
+						<ul>
+						<% subsection.programs.each do |program| %>
+							<% if program.class_sessions.count > 0 %>
+								<li><%= link_to(program.name, {:action => 'show', :controller => 'online_registration', :id => program.id}, :class => 'action_browse') %></li>
 							<% end %>
-							</ul>
 						<% end %>
+						</ul>
 					<% end %>
-					</ul>
 				<% end %>
-
-
+				</ul>
+		<% end %>
 	<% end %>
 	</ul>
           </div><!--/.well -->
@@ -98,7 +102,7 @@
     <!-- Javascripts
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag "application" %>
+    <%#= javascript_include_tag "application" %>
 
   </body>
 </html>

@@ -1,0 +1,59 @@
+<div class="program display">
+<h4><%= @registration_basket.account.email %> || (<%= @registration_basket.account.home_area %>)<%= @registration_basket.account.home_phone[0..2] %>-<%= @registration_basket.account.home_phone[3..6] %></h4>
+
+<h4>Registration Basket Items for checkout</h4>
+<table summary="Class Sesssions" class=listing" cellpadding="4">
+	<tr>
+		<th>Name</th>
+		<th>Class</th>
+		<th>Start Date</th>
+		<th>End Date</th>
+		<th>Start Time</th>
+		<th>End Time</th>
+		<th>Days of Week</th>
+		<th>Fee</th>
+		<th>Notes</th>
+	</tr>
+		<% total_fee = 0 %>
+		<% @registration_basket.registration_basket_line_items.each do |item| %>
+			<% days_of_week = get_days_of_week(item.class_session_id) %>
+			<% waitlist_verbage = item.waitlist_flag < 0 ? "Course is full. Upon registration, you will be put on a waitlist and will not be charged unless given a spot in the class.":"" %>
+			<% current_date = Date.today %>
+			<% date_verbage = current_date >= item.class_session.start_date ? "Class has already started":"" %>
+				<tr class="registrations">
+					<td><%= item.customer.first_name %> <%= item.customer.last_name %></td>
+					<td><%= item.class_session.program.name %> - <%= item.class_session.session_display_order %> <%= item.class_session.season.season_title.title %> <%= item.class_session.season.season_year %></td>
+					<td><%= item.class_session.start_date.strftime("%b. %d %Y") %></td>
+					<td><%= item.class_session.end_date.strftime("%b. %d %Y") %></td>
+					<td><%= item.class_session.start_time.strftime("%I:%M %p") %></td>
+					<td><%= item.class_session.end_time.strftime("%I:%M %p") %></td>
+					<td><%= days_of_week %></td>
+					<td><%= number_to_currency(item.fee_amount) %></td>
+					<% total_fee += item.fee_amount %>
+
+					<td><%= waitlist_verbage %> <%= date_verbage %><td>
+				</tr>
+		<% end %>
+		<tr>
+		<td colspan="7">TOTAL</td>
+		<td><%= number_to_currency(total_fee) %>
+		</tr>
+</table>
+<%= form_for @registration_basket, url: {action: "update"} do |f| %>
+<%= f.hidden_field(:stripe_amount, :value => (total_fee*100).to_i) %>
+<%= f.hidden_field(:total_fee, :value => total_fee) %>
+
+<script
+  src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+  data-key="pk_test_ldAbOSYOYB7gnfM5iH3jsco4"
+  data-amount="<%= total_fee*100 %>"
+  data-name="<%= @registration_basket.account.email %>"
+  data-description="Registration Checkout (<%= number_to_currency(total_fee) %>)"
+  data-currency="usd"
+  data-image="/128x128.png">
+</script>
+
+
+<% end %>
+
+</div>

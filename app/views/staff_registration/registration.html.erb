@@ -5,7 +5,7 @@
 <% else %>
 	<h5>Search for Account</h5>
 <% end %>
-<%= render 'shared/account_search_form' %>
+<%= render partial: 'shared/account_search_form' %>
 <% if session[:account_id] %>
 <div class="account registration">
 		<% account_id = @account.first.account.id %>
@@ -41,9 +41,9 @@
 							<%= display_balance %>
 						<% end %>
 						|| <%= link_to("View Accounting History", {:action => 'show_account_history', :controller => 'accounting_transactions', :account_id => session[:account_id], :from => 'registration'}, 
-		:class => 'add-customer-link') %> || Make a Payment: <%= link_to("Cash/Check", {:action => 'new', :controller => 'payments', 
-		:account_id => account_id}, :class => 'select-session-link') %> |  <%= link_to("Credit Card", {:action => 'new', :controller => 'charges', 
-		:account_id => account_id}, :class => 'select-session-link') %></td>
+		:class => 'add-customer-link') %> || Make a Payment: 
+		<%= link_to("Cash/Check", {:action => 'new', :controller => 'payments', :account_id => account_id, :payment_type_id => '2'}, :class => 'select-session-link') %> |  
+		<%= link_to("Credit Card", {:action => 'new', :controller => 'payments', :account_id => account_id, :payment_type_id => '3'}, :class => 'select-session-link') %> || <%= link_to("Request Refund", {:action => 'new', :controller => 'refunds'}, :class => 'request-refund-link') %></td>
 				</tr>
 		</ table>
 
@@ -114,7 +114,6 @@
 		</div>
 		<table summary="Class Sesssions" class=listing">
 			<tr>
-				<th>Status</th>
 				<th>Available</th>
 				<th>Start Date</th>
 				<th>End Date</th>
@@ -137,7 +136,6 @@
 					<% date_verbage = current_date >= @class_sessions.first.end_date ? "Class is completed":"" %>
 					<%= form_for @registration, :url => {:action => 'create_registration'}, html: {class: "reg_form"} do |f| %>
 					<tr class="class sessions">
-						<td><%= @class_sessions.first.session_status_id %></td>
 						<td><%= available %></td>
 						<td><%= @class_sessions.first.start_date.strftime("%b. %d %Y") %></td>
 						<td><%= @class_sessions.first.end_date.strftime("%b. %d %Y") %></td>

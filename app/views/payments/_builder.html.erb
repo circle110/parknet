@@ -1,0 +1,16 @@
+		<% i = 0 %>
+		<%= f.fields_for :payment_allocations do |builder| %>
+			<%= builder.hidden_field :agency_id, :value => session[:agency_id] %>
+			<%= builder.hidden_field :user_stamp, :value => session[:staff_user_id] %>
+			<%= builder.hidden_field :reference_id, :value => @registrations[i][:id] %>
+			<%= builder.hidden_field :allocation_type, :value => "r" %>
+			<%= builder.hidden_field :class_session_id, :value => @registrations[i][:class_session_id] %>
+			<%= builder.hidden_field :customer_id, :value => @registrations[i][:customer_id] %>
+			
+			<% unpaid_balance = number_to_currency(@registrations[i].unpaid_balance) %>
+			<li class="field">
+				<%= builder.label :amount, "Allocation Amount -- #{@registrations[i].customer.first_name} #{@registrations[i].customer.last_name} #{@registrations[i].class_session.program.name} #{@registrations[i].class_session.season.season_title.title} #{@registrations[i].class_session.season.season_year} | Unpaid Balance: #{unpaid_balance}" %>
+				<%= builder.text_field :amount, :value => @registrations[i].unpaid_balance %>
+			</li>
+			<% i += 1 %>
+		<% end %>

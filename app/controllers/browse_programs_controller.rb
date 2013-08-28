@@ -2,15 +2,19 @@ class BrowseProgramsController < ApplicationController
 
 	layout "browse"
 	
+	before_filter :check_agency
+	#before_filter :wipe
+	
 	def browse
-		@program = Program.find(params[:id])
+		agency = Agency.find(session[:agency_id])
+		@program = ClassSession.where("program_id = ? AND season_id = ?", params[:id], agency.current_online_season_id)
 	end
 	
 	
-  def show
-  	@program = Program.find(params[:id])
-
-  end
+	def show
+		agency = Agency.find(session[:agency_id])
+		@program = ClassSession.where("program_id = ? AND season_id = ?", params[:id], agency.current_online_season_id)
+	end
   
   def list
 	if params[:kid]
@@ -24,5 +28,24 @@ class BrowseProgramsController < ApplicationController
 		@programs = Program.where("name like ?", "%" + params[:text] + "%")
 	end
   end
+  
+  	def check_agency
+		unless session[:agency_id]
+			if params[:agency_id]
+				agency_id = params[:agency_id]
+				agency_id = agency_id.to_i
+				session[:agency_id] = agency_id
+			else
+				render('no_agency')
+			end
+			return false # halts the before filter
+		else
+			return true
+		end
+	end
+	
+	def wipe
+		session[:agency_id] = nil
+	end
   
 end

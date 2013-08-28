@@ -1,19 +1,29 @@
 class Registration < ActiveRecord::Base
+	include ActiveModel::Dirty
+	
 	belongs_to :agency
 	belongs_to :customer
 	belongs_to :class_session
 	belongs_to :program
-	has_one :accounting_transaction, as: :reference
+	has_many :payment_allocations, as: :reference
+	has_many :accounting_transactions, as: :reference
 	
-	attr_accessible :agency_id, :customer_id, :class_session_id, :user_stamp, :fee_amount, :creation_user_stamp, :status_id
+	attr_accessible :agency_id, :customer_id, :class_session_id, :user_stamp, :fee_amount, :unpaid_balance, :creation_user_stamp, :status_id
 	
 	validates :agency_id, :customer_id, :user_stamp, :creation_user_stamp,:fee_amount, :class_session_id, :presence => true
 	validates_uniqueness_of :customer_id, :scope => :class_session_id, :message => ' selected is already registered for that class.'
 	
-	after_save :create_accounting_transaction
-	after_save :update_class_num_registered
-	after_save :update_customer_account_balance
+	after_create :create_accounting_transaction
+	after_create :update_class_num_registered
+	after_create :update_customer_account_balance
+	
+	after_update :create_accounting_transaction, :if => :status_change
+	after_update :update_class_num_registered, :if => :status_change
+	after_update :update_customer_account_balance, :if => :status_change
 
+	def status_change
+		status_id_changed?
+	end
 	
 	def create_accounting_transaction
 		class_session = ClassSession.find(class_session_id)
@@ -88,6 +98,7 @@ class Registration < ActiveRecord::Base
 					:credit => fee_amount
 				)
 				accounting_transaction.save
+			else
 		end		
 	end
 	

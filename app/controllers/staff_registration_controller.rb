@@ -29,7 +29,8 @@ class StaffRegistrationController < ApplicationController
 		:creation_user_stamp => params[:user_stamp],
 		:class_session_id => params[:class_session_id],
 		:customer_id => params[:customer_id],
-		:fee_amount => params[:fee_amount]
+		:fee_amount => params[:fee_amount],
+		:unpaid_balance => params[:fee_amount]
 		)
 
 		if	@registration.save
@@ -41,6 +42,10 @@ class StaffRegistrationController < ApplicationController
 			@registration = current_agency.registrations.new
 			render('registration')
 		else
+			@account = Customer.includes(:account).where("accounts.id" => session[:account_id])
+			@class_sessions = ClassSession.where("class_sessions.id" => session[:class_session_id])
+			@seasons = current_agency.seasons.find(:all)
+			@balance = Customer.where("account_id" => session[:account_id]).sum(:current_account_balance)
 			flash[:notice] = "Registration Failed"
 			render('registration')
 		end	
@@ -48,7 +53,7 @@ class StaffRegistrationController < ApplicationController
   
 	def withdraw_registration
 		@registration = Registration.find(params[:registration_id])
-		@registration.status_id = params[:status_id]
+		@registration.status_id = "w"
 		@registration.withdraw_datetime = Time.now
 		@registration.user_stamp = session[:staff_user_id]
 		if @registration.save

@@ -1,0 +1,7 @@
+<h4>Waiver for the <%= @agency.name %></h4>
+
+<% agency_waiver = "shared/waivers/waiver_" + @agency.id.to_s %>
+<%= render(:partial => agency_waiver) %>
+
+<p>
+<%= link_to("I accept the term of the waiver. Proceed to checkout", {:action => 'checkout'}, :class => 'action_checkout') %>
