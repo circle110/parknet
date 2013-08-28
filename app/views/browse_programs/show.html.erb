@@ -26,8 +26,8 @@ Minimum Registrants: <%= @program.first.program.default_minimum_registrants %>, 
 			<tr class="class sessions">
 				<td valign="top"><%= session.session_display_order %></td>
 				<td valign="top"><%= available %></td>
-				<td valign="top"><%=t session.start_date.strftime("%b. %d %Y") %></td>
-				<td valign="top"><%=t session.end_date.strftime("%b. %d %Y") %></td>
+				<td valign="top"><%= session.start_date.strftime("%b. %d %Y") %></td>
+				<td valign="top"><%= session.end_date.strftime("%b. %d %Y") %></td>
 				<td valign="top"><%= session.start_time.strftime("%I:%M %p") %></td>
 				<td valign="top"><%= session.end_time.strftime("%I:%M %p") %></td>
 				<td valign="top"><%= days_of_week %></td>
