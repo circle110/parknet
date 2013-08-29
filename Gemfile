@@ -13,7 +13,7 @@ gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'coffee-rails', '3.2.2'
 gem 'therubyracer', :platforms => :ruby
 #gem 'libv8', '3.16.14.3'
-#gem "less-rails"
+gem "less-rails"
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 gem 'heroku'
 #gem 'yaml_db'
