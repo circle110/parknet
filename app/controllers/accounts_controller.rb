@@ -4,12 +4,19 @@ class AccountsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
-		find_account
+	def index
+		@customers = []
+		@initial = "yes"
 	end
 	
 	def new
 		@account = Account.new(:agency_id => session[:agency_id])
+	end
+	
+	def search
+		find_account
+		@search_text = params[:search_text]
+		render('index')
 	end
 	
 	def create
@@ -24,6 +31,7 @@ class AccountsController < ApplicationController
 	end
 	
 	def edit
+		@search_text = params[:search_text]
 		@account = Account.find(params[:id])
 		@balance = Customer.where("account_id = ?", session[:account_id]).sum(:current_account_balance)
 	end

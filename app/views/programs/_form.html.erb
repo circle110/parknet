@@ -1,4 +1,4 @@
-	<%= form_for @program, url: {controller: "programs", action: "update"}, html: {class: "input_form"} do |f| %>
+	<%= form_for @program, html: {class: "input_form"} do |f| %>
 		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
 		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
 		<table summary="Program fields">
@@ -35,6 +35,7 @@
 				<td><%= f.text_field(:default_maximum_registrants, size: "3") %></td>
 			</tr>	
 
+			
 			<tr>
 				<th><%= f.label :deferred_gl_account_id %></th>
 				<td><%= f.select(:deferred_gl_account_id, GlAccount.all.collect {|s| [s.number_name, s.id]}) %></td>
@@ -71,10 +72,6 @@
 			<tr>
 				<th><%= f.label :confirmation_text %></th>
 				<td><%= f.text_area(:confirmation_text, size: "40x2") %></td>
-			</tr>
-			<tr>
-				<th><%= f.label :photo %></th>
-				<td><%= f.file_field(:photo) %></td>
 			</tr>
 			<tr>
 				<th><%= f.label :description %></th>

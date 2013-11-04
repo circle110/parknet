@@ -1,15 +1,21 @@
 Parknet::Application.routes.draw do
 
+  post "headshot/capture" => 'headshot#capture', :as => :headshot_capture
+
+  devise_for :users
+
 	root :to => "staff_access#login"
 
 	get "staff_registration/registration"
 	get "browse_programs/show"
 	get "customer_access/browse"
 	match 'customer/login', :to => 'customer_access#login'
-	match ':controller(/:action(/:agency_id(/:id)))(.:format)'
+	match 'staff_menu', :to => 'staff_sessions#menu'
+	#match ':controller(/:action(/:agency_id(/:id)))(.:format)'
 	get "log_in" => "staff_sessions#new", :as => "log_in"
 	get "staff_menu" => "staff_sessions#menu", :as => "staff_menu"
 	#get "customer_menu" => "customer_access#menu", :as => "customer_menu"
+	get "staff_access/select_location"
 	get "customer_access/menu"
 	get "customer_access/logout"
 	get "online_registration/view_basket"
@@ -20,6 +26,7 @@ Parknet::Application.routes.draw do
 	get "static_pages/home"
 	get "static_pages/help"
 	get "facilities/list"
+	get "facility_types/list"
 	get "funds/list"
 	get "staff_users/list"
 	get "gl_accounts/list"
@@ -35,6 +42,8 @@ Parknet::Application.routes.draw do
 	get "accounts/list"
 	get "accounts/edit"
 	get "accounts/search"
+	get "refunds/process_refunds"
+	get "membership1_level_ones/list"
 	post "maintain_program" => "programs#edit", :as => "maintain_program"
 	get "class_sessions/list_per_program"
 	post "new_class_session" => "class_session#new", :as => "new_class_session"
@@ -46,7 +55,15 @@ Parknet::Application.routes.draw do
 	get "customers/add_member"
 	get "customers/add_head_of_household"
 	get "online_registration/show"
-	#get "facilities/new"
+	get 'staff_membership_sales/update_level_two', :as => 'update_level_two'
+	get 'staff_membership_sales/update_level_three', :as => 'update_level_three'
+	get 'staff_membership_sales/update_term', :as => 'update_term'
+	get 'staff_membership_sales/update_fees', :as => 'update_fees'
+	get 'registrations/update_programs', :as => 'update_programs'
+	get 'registrations/update_class_sessions', :as => 'update_class_sessions'
+	get "accounting_transactions/select_gl_report_date"
+	get "payments/select_daily_cash_balance_report_date"
+	#root :to => "staff_membership_sales#memberships"
 	resources :facilities
 	resources :funds
 	resources :gl_accounts
@@ -66,6 +83,14 @@ Parknet::Application.routes.draw do
 	resources :charges
 	resources :online_registration
 	resources :refunds
+	resources :facility_types
+	resources :membership_level_ones
+	resources :membership_level_twos
+	resources :membership_level_threes
+	resources :memberships
+	resources :membership_terms
+	resources :membership_scans
+	
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

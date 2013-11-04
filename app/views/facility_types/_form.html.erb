@@ -1,0 +1,23 @@
+	<%= form_for @facility_type, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<table summary="Facility Type form fields">
+			<tr>
+				<th><%= f.label(:name, "Facility Type Name") %></th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>
+				<th><%= f.label(:active, "Active?") %></th>
+				<td><%= f.check_box(:active, {checked: true}) %></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+				<% if @facility_type.new_record? %>
+					<%= f.submit "Create New Facility Type" %>
+				<% else %>
+					<%= f.submit "Post Facility Type Edits" %>
+				<% end %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

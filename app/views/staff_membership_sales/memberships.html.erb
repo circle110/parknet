@@ -1,0 +1,188 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @membership_sale}) %>
+<h3>Membership Sales</h3>
+<% if session[:account_id] %>
+	<h5>Select Different Account</h5>
+<% else %>
+	<h5>Search for Account</h5>
+<% end %>
+<%= render partial: 'shared/account_search_form' %>
+<% if session[:account_id] %>
+	<div class="account registration">
+			<% account_id = @account.first.account.id %>
+			<table summary="Selected Accounts">
+					<tr>
+						<th>Email</th>
+						<td><%= @account.first.account.email %></td>
+					</tr>	
+					<tr>
+						<th>Phone</th>
+						<% phone = @account.first.account.home_phone.split('') %>
+						<td>(<%= @account.first.account.home_area %>) <%= @account.first.account.home_phone[0..2] %>-<%= @account.first.account.home_phone[3..6] %></td>
+					</tr>				
+					<tr>
+						<th>Address</th>
+						<td><%= @account.first.account.address %></td>
+					</tr>
+					<tr>
+						<th></th>
+						<td><%= @account.first.city.name %>, <%= @account.first.account.state %> <%= @account.first.account.zip %></td>
+					</tr>
+					<tr>
+						<th>Resident</th>
+						<td><%= @account.first.account.resident_flag = 1 ? "Yes":"No" %></td>
+					</tr>
+					<tr>
+						<th>Account Balance >> </th>
+						<% display_balance = number_to_currency(@balance) %>
+						<% red_balance = "<font color=\"red\">".html_safe + display_balance + "</font>".html_safe %>
+						<td><% if @balance > 0.5 %>
+								<%= red_balance.html_safe %>
+							<% else %>
+								<%= display_balance %>
+							<% end %>
+							|| <%= link_to("View Accounting History", {:action => 'show_account_history', :controller => 'accounting_transactions', :account_id => session[:account_id], :from => 'memberships'}, 
+			:class => 'add-customer-link') %> || Make a Payment: 
+			<%= link_to("Cash/Check", {:action => 'new', :controller => 'payments', :account_id => account_id, :payment_type_id => '2'}, :class => 'select-session-link') %> |  
+			<%= link_to("Credit Card", {:action => 'new', :controller => 'payments', :account_id => account_id, :payment_type_id => '3'}, :class => 'select-session-link') %> || <%= link_to("Request Refund", {:action => 'new', :controller => 'refunds'}, :class => 'request-refund-link') %></td>
+					</tr>
+			</ table>
+
+		<table>
+			<tr>
+			<td colspan="2"><h4>Account Members</h4></td>
+			<td><%= link_to("Edit Account", {:action => 'edit', :controller => 'accounts', :id => @account.first.id, :from => 'memberships'}, :class => 'action_edit') %></td>
+			<td colspan="2">View all account memberships</td>
+		</tr>
+		<tr>
+			<th>Head Of Household</th>
+			<th>Name</th>
+			<th>Birthday</th>
+			<th>Age</th>
+			<th></th>
+
+		</tr>
+			
+			<% @account.each do |customer| %>
+				
+				<tr>
+					<td><%= customer.head_of_household_flag == 1 ? " ✓ ":"" %></td>
+					<td><%= customer.first_name %> <%= customer.last_name %></td>
+					<td><%= customer.birthdate.strftime("%b. %d, %Y") %></td>
+					<td><%= distance_of_time_in_words(Time.now, customer.birthdate) %></td>
+					<td><%= link_to("View Memberships", {:action => 'show', :controller => 'staff_membership_sales', :id => customer.id}, :class => 'action_edit') %></td>
+				</tr>
+			<% end %>
+		</table>	
+	</ div>	
+
+
+	--------------------------------------------------------------------------------------------------------------------------------------------
+
+	<%= form_for @staff_membership_sale, :url => {:action => 'create_membership_sale'} do |f| %>
+		<%= collection_select(nil, :customer_id, @account, :id, :full_name, {:prompt => "--Select Customer--"}, {:id => 'customer_select'}) %>
+		<br/>
+		<%= collection_select(nil, :membership_level_one_id, @level_one, :id, :name, {:prompt => "--Select Level One--"}, {:id => 'level_one_select'}) %>
+		<br/>
+		<%= collection_select(nil, :membership_level_two_id, @level_two, :id, :name, {:prompt => "--Select Level Two--"}, {:id => 'level_two_select'}) %>
+		<br/>
+		<%= collection_select(nil, :membership_level_three_id, @level_three, :id, :name, {:prompt => "--Select Level Three--"}, {:id => 'level_three_select'}) %>
+		<br>
+		<%= collection_select(nil, :membership_term_id, @terms, :id, :name, {:prompt => "--Select Term Length--"}, {:id => 'term_select'}) %>
+		<br>
+		<%= collection_select(nil, :fee_id, @fees, :id, :name_fee, {:prompt => "--Select Fee--"}, {:id => 'fee_select'}) %>
+		<br>
+		<%= select_date() %>
+		<br><%= submit_tag "Sell Membership" %>
+	<% end %>
+	</div>
+	
+<% end %>
+
+<script>
+$(document).ready(function() {
+$("#customer_select").val(''); 
+$("#level_one_select").val('');
+$("#level_two_select").val('');
+$("#level_three_select").val('');
+$("#term_select").val('');
+$("#fee_select").val('');
+
+ $('#level_one_select').attr('disabled', 'disabled');
+ $('#level_two_select').attr('disabled', 'disabled');
+ $('#level_three_select').attr('disabled', 'disabled');
+ $('#term_select').attr('disabled', 'disabled');
+ $('#fee_select').attr('disabled', 'disabled');
+ $('#date_year').attr('disabled', 'disabled');
+ $('#date_month').attr('disabled', 'disabled');
+ $('#date_day').attr('disabled', 'disabled');
+ 
+$('#customer_select').change(function() {
+$('#level_one_select').removeAttr('disabled');
+});
+
+$('#level_one_select').change(function() {
+$('#level_two_select').removeAttr('disabled');
+$.ajax({
+url: "<%= update_level_two_path %>",
+data: {
+level_one_id : $('#level_one_select').val()
+},
+dataType: "script"
+});
+});
+
+$('#level_two_select').change(function() {
+$('#level_three_select').removeAttr('disabled');
+$.ajax({
+url: "<%= update_level_three_path %>",
+data: {
+level_two_id : $('#level_two_select').val(),
+level_one_id : $('#level_one_select').val()
+},
+dataType: "script"
+});
+});
+
+$('#level_three_select').change(function() {
+$('#term_select').removeAttr('disabled');
+$.ajax({
+url: "<%= update_term_path %>",
+data: {
+level_three_id : $('#level_three_select').val(),
+level_two_id : $('#level_two_select').val(),
+level_one_id : $('#level_one_select').val()
+},
+dataType: "script"
+});
+});
+
+$('#term_select').change(function() {
+$('#fee_select').removeAttr('disabled');
+$.ajax({
+url: "<%= update_fees_path %>",
+data: {
+term_id : $('#term_select').val(),
+level_three_id : $('#level_three_select').val(),
+level_two_id : $('#level_two_select').val(),
+level_one_id : $('#level_one_select').val()
+},
+dataType: "script"
+});
+});
+
+$('#fee_select').change(function() {
+$('#date_year').removeAttr('disabled');
+$('#date_month').removeAttr('disabled');
+$('#date_day').removeAttr('disabled');
+});
+
+});
+</script>
+
+				
+			
+
+
+		
+
+

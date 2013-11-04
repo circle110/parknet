@@ -1,0 +1,2 @@
+module MembershipScansHelper
+end

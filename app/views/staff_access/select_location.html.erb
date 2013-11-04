@@ -1,0 +1,15 @@
+<h3>Select Location</h3>
+
+<%= form_tag(:action => 'location_selected') do %>
+
+<p>
+<%= label_tag :location_id, "Location" %>
+<%= select_tag "location_id", options_from_collection_for_select(@locations, "id", "name"), prompt: "--Select Location--" %>
+</p>
+
+
+<p class="button"><%= submit_tag("Select Location") %></p>
+
+<% end %>
+
+	

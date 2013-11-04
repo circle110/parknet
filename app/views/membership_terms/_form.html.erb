@@ -1,0 +1,35 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @membership_term}) %>
+<h3>Create New Membership Term</h3>
+<table cellpadding="4">
+<%= form_for @membership_term do |f| %>
+<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+<tr>
+<td><%= f.label(:name) %></td>
+<td><%= f.text_field(:name) %></td>
+</tr>
+<tr>
+<td><%= f.label(:term_length) %></td>
+<td><%= f.text_field(:term_length) %></td>
+</tr>
+<tr>
+<td><%= f.label(:term_units) %></td>
+<td><%= f.select(:term_units, [['Weeks', 'w'], ['Months', 'm'], ['Years', 'y']],{:include_blank => '--Select Term Unit--'}) %></td>
+</tr>
+<tr>
+<td><%= f.label(:active) %></td>
+<td>
+<% if @membership_term.new_record? %>
+	<%= f.check_box(:active, :checked => true) %>
+	<% submit_text = "Create New Membership Term" %>
+<% else %>
+	<%= f.check_box(:active) %>
+	<% submit_text = "Post Membership Term Updates" %>
+<% end %>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<%= f.submit submit_text %>
+</td>
+<% end %>

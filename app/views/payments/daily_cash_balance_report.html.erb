@@ -1,0 +1,80 @@
+<h4>Daily Cash Balance Report - <%= @report_date.strftime("%b %d , %Y") %></h4>
+
+<table cellpadding="4">
+<% @grand_total = 0 %>
+<% if @cash.count > 0 %>
+	<tr>
+		<td colspan="3">Cash</td>
+	</tr>
+	<% @cash.each do |p| %>
+		<% head_of_household = Customer.where("account_id = ? AND head_of_household_flag = 1", p.account_id) %>
+		<% @cash_total = @cash.sum(:amount) %>
+		<% @grand_total += @cash_total %>
+		<tr>
+			<td><%= p.created_at.strftime("%I:%M %p") %></td>
+			<td><%= p.staff_user.last_name %>, <%= p.staff_user.first_name %></td>
+			<td><%= p.location_id %></td>
+			<td><%= number_to_currency(p.amount) %></td>
+			<td><%= head_of_household.first.full_name %>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="3">Total for Cash</td>
+		<td><%= number_to_currency(@cash_total) %></td>
+		<td></td>
+	<tr>
+<% end %>
+
+<% if @checks.count > 0 %>
+	<tr>
+		<td colspan="3">Checks</td>
+	</tr>
+	<% @checks.each do |p| %>
+		<% head_of_household = Customer.where("account_id = ? AND head_of_household_flag = 1", p.account_id) %>
+		<% @checks_total = @checks.sum(:amount) %>
+		<% @grand_total += @checks_total %>
+		<tr>
+			<td><%= p.created_at.strftime("%I:%M %p") %></td>
+			<td><%= p.staff_user.last_name %>, <%= p.staff_user.first_name %></td>
+			<td><%= p.location_id %></td>
+			<td><%= number_to_currency(p.amount) %></td>
+			<td><%= head_of_household.first.full_name %>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="3">Total for Checks</td>
+		<td><%= number_to_currency(@checks_total) %></td>
+		<td></td>
+	<tr>
+<% end %>
+
+<% if @credit_cards.count > 0 %>
+	<tr>
+		<td colspan="3">Credit Cards</td>
+	</tr>
+	<% @credit_cards.each do |p| %>
+			<% head_of_household = Customer.where("account_id = ? AND head_of_household_flag = 1", p.account_id) %>
+			<% @credit_cards_total = @credit_cards.sum(:amount) %>
+			<% @grand_total += @credit_cards_total %>
+		<tr>
+			<td><%= p.created_at.strftime("%I:%M %p") %></td>
+			<td><%= p.staff_user.last_name %>, <%= p.staff_user.first_name %></td>
+			<td><%= p.location_id %></td>
+			<td><%= number_to_currency(p.amount) %></td>
+			<td><%= head_of_household.first.full_name %>
+		</tr>
+	<% end %>
+	<tr>
+		<td colspan="3">Total for Credt Cards</td>
+		<td><%= number_to_currency(@credit_cards_total) %></td>
+		<td></td>
+	<tr>
+<% end %>
+
+	<tr>
+		<td colspan="3">Daily Total</td>
+		<td><%= number_to_currency(@grand_total) %></td>
+		<td></td>
+	<tr>
+
+</table>	

@@ -4,7 +4,7 @@ class SeasonTitlesController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
+	def index
 		@season_titles = SeasonTitle.order("season_titles.id ASC")
 	end
 	
@@ -19,7 +19,7 @@ class SeasonTitlesController < ApplicationController
 	def create
 		@season_title = SeasonTitle.new(params[:season_title])
 		if @season_title.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('new')
 		end		
@@ -32,7 +32,7 @@ class SeasonTitlesController < ApplicationController
 	def update
 		@season_title = SeasonTitle.find(params[:id])
 		if @season_title.update_attributes(params[:season_title])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('edit')
 		end	

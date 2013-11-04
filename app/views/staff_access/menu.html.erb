@@ -1,8 +1,9 @@
 <% @page_title = "Staff Menu" %>
+<% location = Location.find(session[:location_id]) %>
 
 <div class="menu">
 	<h2>Staff Menu</h2>
-	<div class="identity">Logged in as: <%= session[:email] %> - <%= session[:agency_name] %></div>
+	<div class="identity">Logged in as: <%= session[:email] %> - <%= session[:agency_name] %> - <%= session[:location_name] %></div>
 	
 	<%= link_to("Logout", :action => 'logout') %>
 	</div>

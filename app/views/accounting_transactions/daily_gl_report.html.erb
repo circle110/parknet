@@ -1,0 +1,88 @@
+<div class="account list">
+<h4>Daily GL Report for <%= @report_date.strftime("%b %d , %Y") %></h4>
+
+
+<% if @gl_info.count > 0 %>
+	<table summary="Account" class="listing" cellpadding="5">
+		<tr>
+			<th>GL Account</th>
+			<th>GL Name</th>
+			<th>Debits</th>
+			<th>Credits</th>
+			<th>Total</th>
+		</tr>
+		
+	<% fund_total_debits = 0 %>
+	<% fund_total_credits = 0 %>
+	<% grand_total_debits = 0 %>
+	<% grand_total_credits = 0 %>	
+	<% last_fund_id = 0 %>
+	<% first_fund = Fund.find(@gl_info[0][:fund_id]) %>
+	<% first_fund_name = first_fund.name %>
+	<% i = 0 %>
+	<% @gl_info.each do |g| %>
+		<% if i == 0 %>
+			<tr class="gl_total">
+				<td colspan="5"><strong><%= first_fund_name %></td>
+			</tr>
+		<% end %>
+			<% if last_fund_id != g[:fund_id] && i != 0 %>
+				<% @old_fund = Fund.find(last_fund_id) %>
+				<% @old_fund_name = @old_fund.name %>
+				<% @fund = Fund.find(g[:fund_id]) %>
+				<% @fund_name = @fund.name %>
+				<tr class="gl_total">
+					<td colspan="2"><strong><%= @old_fund_name %> Totals</td>
+					<td><%= number_to_currency(fund_total_debits) %></td>
+					<td><%= number_to_currency(fund_total_credits) %></td>
+					<td><%= number_to_currency(fund_total_credits - fund_total_debits) %></td>
+				</tr>
+				<tr class="gl_total">
+					<td colspan="5"><strong><%= @fund_name %></td>
+				</tr>
+				<% grand_total_debits += fund_total_debits %>
+				<% grand_total_credits += fund_total_credits %>
+				<% fund_total_debits = 0 %>
+				<% fund_total_credits = 0 %>
+			<% end %>
+		
+		<% debits = AccountingTransaction.where("debit_gl_account_id = ? AND created_at >= ? AND created_at < ?", g[:gl_id], @report_date, @one_day_later).sum(:debit) %>
+		<% credits = AccountingTransaction.where("credit_gl_account_id = ? AND created_at >= ? AND created_at < ?", g[:gl_id], @report_date, @one_day_later).sum(:credit) %>
+
+		<tr class="gl-event">
+
+			<td><%= g[:fund_id].to_s %> - <%= g[:gl_account_number] %></td>
+			<td><%= g[:name] %></td>
+			<td><%= number_to_currency(debits) %></td>
+			<td><%= number_to_currency(credits) %></td>
+			<td><%= number_to_currency(credits - debits) %></td>
+		</tr>
+		
+		<% last_fund_id = g[:fund_id] %>
+		<% fund_total_debits += debits %>
+		<% fund_total_credits += credits %>
+		<% i += 1 %>
+	<% end %>
+	
+	<tr class="gl_total">
+		<tr class="gl_total">
+		<td colspan="2"><strong><%= @fund_name ? @fund_name:first_fund_name %> Totals</td>
+		<td><%= number_to_currency(fund_total_debits) %></td>
+		<td><%= number_to_currency(fund_total_credits) %></td>
+		<td><%= number_to_currency(fund_total_credits - fund_total_debits) %></td>
+	</tr>
+	<% grand_total_debits += fund_total_debits %>
+	<% grand_total_credits += fund_total_credits %>
+	<% fund_total_debits = 0 %>
+	<% fund_total_credits = 0 %>
+	<tr class="grand_total">
+		<td colspan="2"><strong>Daily Grand Totals</td>
+		<td><%= number_to_currency(grand_total_debits) %></td>
+		<td><%= number_to_currency(grand_total_credits) %></td>
+		<td><%= number_to_currency(grand_total_credits - grand_total_debits) %></td>
+	</tr>
+</table>
+<% else %>
+	<p>No GL transaction found for that date.
+<% end %>
+</div>

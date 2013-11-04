@@ -1,23 +1,6 @@
-<%= link_to("<<Back to Season Tile List", {:action => 'list'}, :class => 'back-link') %>
+<%= link_to("<<Back to Season Tile List", {:action => 'index'}, :class => 'back-link') %>
 
 <div class="season title edit">
-	<h2>Edit Season Titles</h2>
-	<%= form_for @season_title, url: {action: "update"}, html: {class: "input_form"} do |f| %>
-		<table summary="Season Title fields">
-			<tr>
-				<th>Title</th>
-				<td><%= f.text_field(:title) %></td>
-			</tr>			
-			<tr>
-				<th>active</th>
-				<td><%= f.check_box(:active) %></td>
-			</tr>
-
-			<tr>
-				<td colspan="2"><%= f.submit "Update Season Title" %>
-				</td>
-			</tr>
-		</ table>
-
-	<% end %>
+	<h3>Edit Season Titles</h3>
+<%= render 'form' %>
 </ div>	

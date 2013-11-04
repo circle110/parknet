@@ -4,7 +4,7 @@ class SeasonsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
+	def index
 		@seasons = Season.order("seasons.default_registration_start_date ASC").where("agency_id = 1")
 	end
 	
@@ -19,7 +19,7 @@ class SeasonsController < ApplicationController
 	def create
 		@season = Season.new(params[:season])
 		if @season.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('new')
 		end		
@@ -32,7 +32,7 @@ class SeasonsController < ApplicationController
 	def update
 		@season = Season.find(params[:id])
 		if @season.update_attributes(params[:season])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('edit')
 		end	

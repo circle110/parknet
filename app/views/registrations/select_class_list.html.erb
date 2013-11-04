@@ -1,0 +1,54 @@
+<h4>Select Class List</h4>
+
+<%= form_tag ({:controller => 'registrations', :action => 'class_list'}) do -%>
+	<%= collection_select(nil, :season_id, @seasons, :id, :season_name_year, {:prompt => "--Select Season--"}, {:id => 'season_select'}) %>
+	<br/>
+	<%= collection_select(nil, :program_id, @programs, :id, :name, {:prompt => "--Select Program--"}, {:id => 'program_select'}) %>
+	<br/>
+	<%= collection_select(nil, :class_session_id, @class_sessions, :id, :session_identifier, {:prompt => "--Select Class Session--"}, {:id => 'class_session_select'}) %>
+
+
+<%#= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :prompt => "--Select Season--") %><br>
+<%#= select_tag "program_id", options_from_collection_for_select(@programs, "id", "name"), prompt: "--Select Program--" %><br>
+
+
+
+<%= submit_tag 'Run Report' %>
+
+
+
+<% end %>
+
+<script>
+$(document).ready(function() {
+	$("#season_select").val(''); 
+	$("#program_select").val('');
+	$("#class_session_select").val('');
+
+	$('#program_select').attr('disabled', 'disabled');
+	$('#class_session_select').attr('disabled', 'disabled');
+	 
+	$('#season_select').change(function() {
+	$('#program_select').removeAttr('disabled');
+	$.ajax({
+	url: "<%= update_programs_path %>",
+	data: {
+	season_id : $('#season_select').val()
+	},
+	dataType: "script"
+	});
+	});
+
+	$('#program_select').change(function() {
+	$('#class_session_select').removeAttr('disabled');
+	$.ajax({
+	url: "<%= update_class_sessions_path %>",
+	data: {
+	season_id : $('#season_select').val(),
+	program_id : $('#program_select').val()
+	},
+	dataType: "script"
+	});
+	});
+});
+</script>

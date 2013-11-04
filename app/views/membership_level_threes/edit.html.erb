@@ -1,0 +1,10 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @membership_level_three}) %>
+<%= link_to("<<Back to Membership Level Three List", {:action => 'index'}, :class => 'back-link') %>
+
+<div class="membership level new">
+	<h3>Edit Membership Level Three - <%= @membership_level_three.name %></h3>
+
+<%= render 'form' %>
+
+</table>
+</ div>	

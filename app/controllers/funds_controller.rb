@@ -4,7 +4,7 @@ class FundsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
+	def index
 		@funds = current_agency.funds.order("funds.fund ASC")
 	end
 	
@@ -20,7 +20,7 @@ class FundsController < ApplicationController
 	def create
 		@fund = current_agency.funds.new(params[:fund])
 		if @fund.save		
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('new')
 		end		
@@ -29,7 +29,7 @@ class FundsController < ApplicationController
 	def update
 		@fund = Fund.find(params[:id])
 		if @fund.update_attributes(params[:fund])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			
 			render('edit')

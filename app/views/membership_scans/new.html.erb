@@ -1,0 +1,33 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @membership_scan}) %>
+
+<%= form_for @membership_scan do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+	<%= f.label(:customer_id, "Scan Member Card") %>
+	<%= f.text_field(:customer_id) %>
+	<%= f.submit('Submit Scan') %>
+
+
+<% end %>
+
+<% if @just_scanned == 1 %>
+	<img src="/headshots_images/<%= @customer.headshot_photo %>"><br>
+	<h4><%= @customer.full_name %></h4>
+	<%= @membership.name %><br>
+	<%= @has_membership.first.start_date.strftime("%B, %d, %Y") %> - <%= @has_membership.first.expiry_date.strftime("%B, %d, %Y") %>
+<% end %>
+
+
+<script type="text/javascript">
+
+window.setInterval(function(){
+  document.getElementById("membership_scan_customer_id").focus();
+}, 5000);
+
+$(function() {
+  $("#membership_scan_customer_id").focus();
+});
+</script>
+
+
+

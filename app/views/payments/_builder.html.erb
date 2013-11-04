@@ -1,16 +1,70 @@
 		<% i = 0 %>
+		<% m = 0 %>
+		<% grand_total_payment_other = 0 %>
+		<% grand_total_payment_from_cab = 0 %>
 		<%= f.fields_for :payment_allocations do |builder| %>
+			<% total_paid = 0 %>
 			<%= builder.hidden_field :agency_id, :value => session[:agency_id] %>
 			<%= builder.hidden_field :user_stamp, :value => session[:staff_user_id] %>
-			<%= builder.hidden_field :reference_id, :value => @registrations[i][:id] %>
-			<%= builder.hidden_field :allocation_type, :value => "r" %>
-			<%= builder.hidden_field :class_session_id, :value => @registrations[i][:class_session_id] %>
-			<%= builder.hidden_field :customer_id, :value => @registrations[i][:customer_id] %>
 			
-			<% unpaid_balance = number_to_currency(@registrations[i].unpaid_balance) %>
+			
+
 			<li class="field">
-				<%= builder.label :amount, "Allocation Amount -- #{@registrations[i].customer.first_name} #{@registrations[i].customer.last_name} #{@registrations[i].class_session.program.name} #{@registrations[i].class_session.season.season_title.title} #{@registrations[i].class_session.season.season_year} | Unpaid Balance: #{unpaid_balance}" %>
-				<%= builder.text_field :amount, :value => @registrations[i].unpaid_balance %>
-			</li>
+			<% if i < @registrations.count %>
+				<%= builder.hidden_field :reference_id, :value => @registrations[i][:id] %>
+				<%= builder.hidden_field :class_session_id, :value => @registrations[i][:class_session_id] %>
+				<%= builder.hidden_field :customer_id, :value => @registrations[i][:customer_id] %>
+				<%= builder.label :amount, "Allocation Amount -- #{@registrations[i].customer.first_name} #{@registrations[i].customer.last_name} #{@registrations[i].class_session.program.name} #{@registrations[i].class_session.season.season_title.title} #{@registrations[i].class_session.season.season_year} | Unpaid Balance: #{@registrations[i].unpaid_balance} in #{@registrations[i].class_session.gl_account.fund.name}" %>	
+				
+				<% total_payment_from_cab = 0 %>
+				<% @payment_from_cab.each do |p| %>
+					<% if p["id"] == @registrations[i][:id] && p['type'] == 'r' && p["payment_amount"] > 0 %>
+						Paid by Account Balance: <%= builder.text_field :amount_from_account, :value => p["payment_amount"] %>
+						<%= builder.hidden_field :cab_fund, :value => p["fund_id"] %>
+						<% total_payment_from_cab += p["payment_amount"] %>
+						<% grand_total_payment_from_cab += p["payment_amount"] %>
+						<% total_paid += p["payment_amount"] %>
+					<% end %>		
+				<% end %>
+				Paid by <span class="payment_type_text">Cash/Check</span>: 
+				<%= builder.text_field :amount, :value => (@registrations[i].unpaid_balance - total_payment_from_cab) %>
+				<% total_paid += (@registrations[i].unpaid_balance - total_payment_from_cab) %>
+				<% grand_total_payment_other += (@registrations[i].unpaid_balance - total_payment_from_cab) %>
+				Total Paid: <%= number_to_currency(total_paid) %>
+			<% else %>
+				<%= builder.hidden_field :reference_id, :value => @memberships[m][:id] %>
+				<%= builder.hidden_field :class_session_id, :value => 0 %>
+				<%= builder.hidden_field :customer_id, :value => @memberships[m][:customer_id] %>
+				<%= builder.label :amount, "Allocation Amount -- #{@memberships[m].customer.full_name} #{@memberships[m].membership.name} #{@memberships[m].start_date} - #{@memberships[m].expiry_date} | Unpaid Balance: #{@memberships[m].unpaid_balance} in #{@memberships[m].membership.gl_account.fund.name}" %>	
+				
+				<% total_payment_from_cab = 0 %>
+				<% @payment_from_cab.each do |p| %>
+					<% if p["id"] == @memberships[m][:id] && p['type'] == 'm' && p["payment_amount"] > 0 %>
+						Paid by Account Balance: <%= builder.text_field :amount_from_account, :value => p["payment_amount"] %>
+						<%= builder.hidden_field :cab_fund, :value => p["fund_id"] %>
+						<% total_payment_from_cab += p["payment_amount"] %>
+						<% grand_total_payment_from_cab += p["payment_amount"] %>
+						<% total_paid += p["payment_amount"] %>
+					<% end %>		
+				<% end %>
+				Paid by <span class="payment_type_text">Cash/Check</span>: 
+				<%= builder.text_field :amount, :value => (@memberships[m].unpaid_balance - total_payment_from_cab) %>
+				<% total_paid += (@memberships[m].unpaid_balance - total_payment_from_cab) %>
+				<% grand_total_payment_other += (@memberships[m].unpaid_balance - total_payment_from_cab) %>
+				Total Paid: <%= number_to_currency(total_paid) %>
+				<% m += 1 %>
+			<% end %>
 			<% i += 1 %>
+
+			</li>
 		<% end %>
+		
+		<ul>
+			<li class="field">Total Payment: <br><span id="total_payment">From Account Balance: <%= number_to_currency(grand_total_payment_from_cab) %> By <span class="payment_type_text">Cash/Check</span>: <%= number_to_currency(grand_total_payment_other) %></span></li>
+			<% if [1,2].include?(session[:payment_type_id].to_i) %>
+				<li class="submit_button">
+				<%= f.submit "Submit Payment" %>
+			<% end %>
+			</li>
+		</ul>
+		

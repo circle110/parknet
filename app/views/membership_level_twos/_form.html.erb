@@ -1,0 +1,47 @@
+<%= form_for @membership_level_two, html: {class: "input_form"} do |f| %>
+	<%#= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+	<table summary="membership_level form fields">
+		<tr>
+			<th><%= f.label(:name) %></th>
+			<td><%= f.text_field(:name) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:multi_member, 'Multi-Member?') %></th>
+			<td><%= f.check_box(:multi_member) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:member_quantity) %></th>
+			<td><%= f.text_field(:member_quantity) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:resident, 'Resident?') %></th>
+			<td><%= f.check_box(:resident) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:age_based, 'Age Based?') %></th>
+			<td><%= f.check_box(:age_based) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:minimum_age) %></th>
+			<td><%= f.text_field(:minimum_age) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:maximum_age) %></th>
+			<td><%= f.text_field(:maximum_age) %></td>
+		</tr>
+		<tr>
+			<th><%= f.label(:active) %></th>
+			<td>
+			<% if @membership_level_two.new_record? %>
+				<%= f.check_box(:active, :checked => true) %>
+				<% submit_text = "Add New Membership Level 1" %>
+			<% else %>
+				<%= f.check_box(:active) %>
+				<% submit_text = "Post Membership Level One Edits" %>
+			<% end %>
+			</td>
+			<tr>
+			<td><%= f.submit submit_text %></td>
+		</tr>
+<% end %>

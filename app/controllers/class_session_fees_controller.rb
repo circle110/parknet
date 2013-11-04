@@ -6,6 +6,7 @@ class ClassSessionFeesController < ApplicationController
 	
 	def new
 		@fee = ClassSessionFee.new(:class_session_id => params[:class_session_id])
+		@class_session = ClassSession.find(params[:class_session_id])
 	end
 	
 	def create

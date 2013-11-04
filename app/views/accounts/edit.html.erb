@@ -2,7 +2,7 @@
 <% if params[:from] == 'registration' %>
 	<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
 <% else %>
-	<%= link_to("<<Back to Account List", {:action => 'list', :account_id => @account.id}, :class => 'back-link') %>
+	<%= link_to("<<Back to Account Search Results", {:action => 'search', :search_text => @search_text}, :class => 'back-link') %>
 <% end %>
 
 <div class="account update">

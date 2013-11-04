@@ -1,0 +1,38 @@
+<h3>Take Photo for <%= @customer.first_name %> <%= @customer.last_name %></h3>
+
+
+<%= headshot_default_config(Rails.application.config.session_options[:key], headshot_capture_path, :on_complete => "customCameraHooks.onComplete") %>
+
+
+       <%= headshot_camera %>
+    
+
+        <br/><br/>
+
+        <button name="button" onclick="headshotHandlers.snap()" type="submit">Snap</button>
+        <button name="button" onclick="headshot.configure()" type="submit">Configure</button>
+		
+<span id="photos"></span>	
+	
+<%= form_tag({:controller => 'headshots', :action => 'headshot_post_save'}, {:id => 'customer_photo'}) do -%>
+	<%= hidden_field_tag 'id', @customer.id %>
+	<%= submit_tag "Accept Selected Photo" %>
+<% end %>
+
+
+<script language="JavaScript">
+  var customCameraHooks = {
+    onComplete: function(response) {
+		var obj = JSON.parse(response);
+		var url = obj.url;
+		var split_url = url.split("_");
+		var last = split_url.pop();
+		var penultimate = split_url.pop();
+		//console.log("<img src=\"/headshots_images/headshot_capture_" + penultimate + "_" + last + "\">");
+		// example: {"status":"Success","message":"Headshot saved.","url":"http://localhost:3000/headshots_custom/headshot_custom_3365_1379649240.jpg"}
+		headshot.reset(); // Reset the camera.
+		$('#photos').html("<img src=\"/headshots_images/headshot_capture_"+ penultimate + "_" + last + "\">");
+		$('#customer_photo').append($('<input type="hidden" name="photo" />').val("headshot_capture_" + penultimate + "_" + last));
+    }
+  };
+</script>

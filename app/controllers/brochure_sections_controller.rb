@@ -4,7 +4,7 @@ class BrochureSectionsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
+	def index
 		@brochure_sections = BrochureSection.order("brochure_sections.name ASC")
 	end
 	
@@ -18,7 +18,7 @@ class BrochureSectionsController < ApplicationController
 	def create
 		@brochure_section = BrochureSection.new(params[:brochure_section])
 		if @brochure_section.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			flash[:notice] = "Creation of new Brochure Section Failed"
 			render('new')
@@ -33,7 +33,7 @@ class BrochureSectionsController < ApplicationController
 		@brochure_section = BrochureSection.find(params[:id])
 		if @brochure_section.update_attributes(params[:brochure_section])
 			flash[:notice] = "Brochure Section \"#{params[:brochure_section][:name]}\" has been updated."
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			flash[:notice] = "Update of Brochure Section Failed"
 			render('edit')

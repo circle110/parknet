@@ -1,0 +1,8 @@
+<div class="account list">
+<h4>Select Date for Daily GL Report</h4>
+
+<%= form_tag ({:controller => 'accounting_transactions', :action => 'daily_gl_report'}) do -%>
+<%= select_date() %>
+<%= submit_tag "Run GL Report" %>
+<% end %>
+</div>

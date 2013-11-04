@@ -1,0 +1,21 @@
+<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+<div class="account list">
+
+
+<% if @customers.count != 0 %>
+	<h3>Matching Accounts Found</h3>
+	<%= render 'shared/customer_search_results' %>
+	<p>
+	------------------------------------------------------------------------------------------<p>
+
+	Search for a different account:<br>
+<% else %>
+	<p>
+	No matching accounts found. <br>
+	Please search again:<br>
+<% end %>
+
+<%= render 'shared/account_search_form' %>
+<%= render 'shared/search_instructions' %>	
+
+</div>

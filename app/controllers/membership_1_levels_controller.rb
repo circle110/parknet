@@ -1,2 +1,0 @@
-class Membership1LevelsController < ApplicationController
-end

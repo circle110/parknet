@@ -5,7 +5,7 @@ class FacilitiesController < ApplicationController
 	before_filter :confirm_logged_in
 	
 	
-	def list
+	def index
 		@facilities = Facility.where(:agency_id => session[:agency_id]).order("facilities.id ASC")
 	end
 	
@@ -24,7 +24,7 @@ class FacilitiesController < ApplicationController
 	def create
 		@facility = Facility.new(params[:facility])
 		if @facility.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('new')
 		end		
@@ -37,7 +37,7 @@ class FacilitiesController < ApplicationController
 	def update
 		@facility = Facility.find(params[:id])
 		if @facility.update_attributes(params[:facility])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('edit')
 		end	

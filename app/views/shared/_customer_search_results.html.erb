@@ -10,8 +10,10 @@
 				<td>
 				<% if request.env['HTTP_REFERER'].include? 'registration' %>
 					<%= link_to("#{cust.first_name} #{cust.last_name}", {:action => 'registration', :controller => 'staff_registration', :id => cust.account.id, :previous_event => 'account_selected'}, :class => 'action_edit') %>
+				<% elsif request.env['HTTP_REFERER'].include? 'membership' %>
+					<%= link_to("#{cust.first_name} #{cust.last_name}", {:action => 'memberships', :controller => 'staff_membership_sales', :id => cust.account.id, :previous_event => 'account_selected'}, :class => 'action_edit') %>
 				<% else %>
-					<%= link_to("#{cust.first_name} #{cust.last_name}", {:action => 'edit', :id => cust.account.id, :previous_event => 'account_selected'}, :class => 'action_edit') %>
+					<%= link_to("#{cust.first_name} #{cust.last_name}", {:action => 'edit', :id => cust.account.id, :search_text => @search_text}, :class => 'action_edit') %>
 				<% end %>
 				</td>
 				<td>(<%= cust.account.home_area %>) <%= cust.account.home_phone[0..2] %>-<%= cust.account.home_phone[3..6] %></td>

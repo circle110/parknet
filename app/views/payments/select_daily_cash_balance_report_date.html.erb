@@ -1,0 +1,8 @@
+<div class="account list">
+<h4>Select Date for Daily Cash Balance Report</h4>
+
+<%= form_tag ({:controller => 'payments', :action => 'daily_cash_balance_report'}) do -%>
+<%= select_date() %>
+<%= submit_tag "Run Daily Cash Balance Report" %>
+<% end %>
+</div>

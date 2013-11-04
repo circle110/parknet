@@ -3,5 +3,5 @@ class FacilityType < ActiveRecord::Base
 	has_many :facilities
 
 	
-  # attr_accessible :title, :body
+  attr_accessible :agency_id, :name, :active, :user_stamp
 end

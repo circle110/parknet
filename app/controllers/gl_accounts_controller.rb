@@ -4,8 +4,8 @@ class GlAccountsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
-		@gl_accounts = current_agency.gl_accounts.includes(:fund).order("funds.fund ASC", "gl_account_number ASC")
+	def index
+		@gl_accounts = current_agency.gl_accounts.includes(:fund).order("gl_accounts.active ASC", "funds.fund ASC", "gl_account_number ASC")
 	end
 	
 	def show
@@ -20,7 +20,7 @@ class GlAccountsController < ApplicationController
 	def create
 		@gl_account = current_agency.gl_accounts.new(params[:gl_account])
 		if @gl_account.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('new')
 		end		
@@ -33,7 +33,7 @@ class GlAccountsController < ApplicationController
 	def update
 		@gl_account = GlAccount.find(params[:id])
 		if @gl_account.update_attributes(params[:gl_account])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('edit')
 		end	

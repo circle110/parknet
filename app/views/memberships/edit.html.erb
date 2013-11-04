@@ -1,0 +1,9 @@
+<%= link_to("<<Back to Membership List", {:action => 'index'}, :class => 'back-link') %>
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @membership}) %>
+<h3>Edit Membership <%= @membership.name %></h3>
+<table cellpadding="4">
+<%= render 'form' %>
+</table>
+
+
+

@@ -25,6 +25,15 @@ class Agency < ActiveRecord::Base
 	has_many :registration_baskets
 	has_many :registration_basket_line_items
 	has_many :refunds
+	has_many :membership_level_ones
+	has_many :membership_level_twos
+	has_many :membership_level_threes
+	has_many :memberships
+	has_many :membership_terms
+	has_many :membership_sales
+	has_many :membership_fees
+	has_many :membership_scans
+	has_many :locations
 	
   # attr_accessible :title, :body
 end

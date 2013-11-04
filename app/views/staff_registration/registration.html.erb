@@ -35,7 +35,7 @@
 					<th>Account Balance >> </th>
 					<% display_balance = number_to_currency(@balance) %>
 					<% red_balance = "<font color=\"red\">".html_safe + display_balance + "</font>".html_safe %>
-					<td><% if @balance > 0 %>
+					<td><% if @balance > 0.5 %>
 							<%= red_balance.html_safe %>
 						<% else %>
 							<%= display_balance %>
@@ -50,8 +50,8 @@
 	<table>
 		<tr>
 		<td colspan="2"><h4>Account Members</h4></td>
-		<td><%= link_to("Edit Account", {:action => 'edit', :controller => 'accounts', :id => @account.first.id, :from => 'registration'}, :class => 'action_edit') %></td>
-		<td colspan="2">View all account registrations</td>
+		<td><%= link_to("Edit Account", {:action => 'edit', :controller => 'accounts', :id => @account.first.account_id, :from => 'registration'}, :class => 'action_edit') %></td>
+		<td colspan="2"><%= link_to("View all account registrations", {:action => 'index', :controller => 'registrations', :account_id => @account.first.account_id, :from => 'registration'}, :class => 'action_edit') %></td>
 	</tr>
 	<tr>
 		<th>Head Of Household</th>
@@ -79,11 +79,13 @@
 --------------------------------------------------------------------------------------------------------------------------------------------
 <% if session[:class_session_id] %>
 	<% search_verbage = "Select Different Program" %>
+	<% current_season = @class_sessions.first.season_id %>
 	<div class="program display">
 		<h4><%= @class_sessions.first.program.name %> - <%= @class_sessions.first.session_display_order %></h4>
 
 <% else %>
 	<% search_verbage = "Search for Program" %>
+	<% current_season = @agency.current_online_season_id %>
 <% end %>
 	<%= form_tag '/staff_registration/lookup_program', html: {class: "input_form"} do %>
 		<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
@@ -96,7 +98,7 @@
 		<td>
 			<%= text_field_tag(:search_text) %></td>
 		<td>
-			<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :selected => @class_sessions.first.season_id) %>
+			<%= select_tag "season_id", options_for_select(@seasons.collect{|u| ["#{u.season_title.title} - #{u.season_year}", u.id]}, :selected => current_season) %>
 		</td>
 		<td><%= submit_tag "Search for program" %></td>
 		</tr>

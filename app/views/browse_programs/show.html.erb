@@ -5,7 +5,7 @@
 Ages: <%= @program.first.program.min_age %> <%= @program.first.program.min_age_type %> - <%= @program.first.program.max_age %> <%= @program.first.program.max_age_type %><br>
 Minimum Registrants: <%= @program.first.program.default_minimum_registrants %>, Maximum Registrants: <%= @program.first.program.default_maximum_registrants %><br>
 <%= @program.first.program.photo %></br>
-<%= @program.first.program.description %><p>
+<%= simple_format(@program.first.program.description, {}, sanitize: false) %><p>
 
 </div>
 <h4>Class Sessions</h4>

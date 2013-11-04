@@ -1,6 +1,24 @@
-<%= form_tag '/accounts/list', html: {class: "input_form"} do %>
-
-	<%= text_field_tag(:search_text) %>
-	<%= submit_tag "Search for account" %>
-
+<% if request.env['HTTP_REFERER'] %>
+	<% referer = request.env['HTTP_REFERER'] %>
+<% else %>
+	<% referer = 'none' %>
 <% end %>
+
+<% if referer.include? 'registration' %>
+	<%= form_tag '/staff_registration/lookup_account', html: {class: "input_form"} do %>
+		<%= text_field_tag(:search_text) %>
+		<%= submit_tag "Search for account" %>
+	<% end %>
+<% elsif referer.include? 'membership' %>
+	<%= form_tag '/staff_membership_sales/lookup_account', html: {class: "input_form"} do %>
+		<%= text_field_tag(:search_text) %>
+		<%= submit_tag "Search for account" %>
+	<% end %>
+<% else %>
+	<%= form_tag '/accounts/search', html: {class: "input_form"} do %>
+		<%= text_field_tag(:search_text) %>
+		<%= submit_tag "Search for account" %>
+	<% end %>
+<% end %>
+
+

@@ -1,24 +1,6 @@
-<%= link_to("<<Back to Season Title List", {:action => 'list'}, :class => 'back-link') %>
+<%= link_to("<<Back to Season Title List", {:action => 'index'}, :class => 'back-link') %>
 
 <div class="season title new">
-	<h2>Create New Season Title</h2>
-	<%= form_for @season_title, url: {action: "create"}, html: {class: "input_form"} do |f| %>
-		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
-		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
-		<table summary="Season Title fields">
-			<tr>
-				<th>Title</th>
-				<td><%= f.text_field(:title) %></td>
-			</tr>			
-			<tr>
-				<th>active</th>
-				<td><%= f.check_box(:active, :checked => true) %></td>
-			</tr>
-			<tr>
-				<td colspan="2"><%= f.submit "Create New Season Title" %>
-				</td>
-			</tr>
-		</ table>
-
-	<% end %>
+	<h3>Create New Season Title</h3>
+<%= render 'form' %>
 </ div>		

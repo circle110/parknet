@@ -1,0 +1,47 @@
+	<%= form_for @staff_user, html: {class: "input_form"} do |f| %>
+	<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+	<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+
+		<table summary="Staff User fields">
+			<tr>
+				<th><%= f.label(:first_name) %></th>
+				<td><%= f.text_field(:first_name) %></td>
+			</tr>
+			<tr>
+				<th><%= f.label(:last_name) %></th>
+				<td><%= f.text_field(:last_name) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:email) %></th>
+				<td><%= f.text_field(:email) %></td>
+			</tr>
+			<% if @staff_user.new_record? %>
+				<% submit_text = "Create New Staff User" %>
+				<tr>
+					<th><%= f.label(:password) %></th>
+					<td><%= f.password_field(:password) %></td>
+				</tr>
+				<tr>
+					<th><%= f.label(:password_confirmation) %></th>
+					<td><%= f.password_field(:password_confirmation) %></td>
+				</tr>
+			<% else %>
+				<% submit_text = "Post Staff User Edits" %>
+			<% end %>
+			<tr>
+			<td>
+			<%= f.label :role, "Security Roles:" %>
+			<% for staff_user_role in StaffUserRole.find(:all) %>
+			<div>
+			<%= check_box_tag "staff_user[staff_user_role_ids][]", staff_user_role.id, @staff_user.staff_user_roles.include?(staff_user_role) %>
+			<%= staff_user_role.name %>
+			</div>
+			<% end %>
+			</td>
+			<tr>
+				<td colspan="2"><%= f.submit submit_text %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

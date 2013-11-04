@@ -4,8 +4,12 @@ class ProgramsController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
-		@programs = current_agency.programs.find(:all)
+	def index
+		if params[:sort] == "code"
+			@programs = current_agency.programs.order(:code)
+		else
+			@programs = current_agency.programs.order(:name)
+		end
 	end
 	
 	def show
@@ -23,7 +27,7 @@ class ProgramsController < ApplicationController
 	def create
 		@program = Program.new(params[:program])
 		if @program.save
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			flash[:notice] = "Program creation failed"
 			render('new')
@@ -35,8 +39,7 @@ class ProgramsController < ApplicationController
 		if params[:season_id] 
 			season_id = params[:season_id]
 		else
-			#season_id = session[:current_working_season] -- Got to deal on this
-			season_id = 1
+			season_id = Agency.find(session[:agency_id]).current_online_season_id
 		end
 		@program = Program.find(params[:id])
 		@class_sessions = ClassSession.where("program_id = ? and season_id = ?", params[:id], season_id)

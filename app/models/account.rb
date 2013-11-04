@@ -3,6 +3,7 @@ class Account < ActiveRecord::Base
 	has_many :customers
 	has_many :account_contacts
 	belongs_to :city
+	has_many :payments
 	
 	attr_accessor :password
 	

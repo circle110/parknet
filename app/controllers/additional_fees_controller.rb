@@ -1,0 +1,2 @@
+class AdditionalFeesController < ApplicationController
+end

@@ -4,41 +4,55 @@ class StaffAccessController < ApplicationController
 	
 	before_filter :confirm_logged_in, :except => [:login, :attempt_login, :logout]
 
-  def index
-	menu
-	render('menu')
-  end
-  
-  def menu
-  end
-
-  def login
-  	render layout: "staff_login"
-  end
-  
-  def attempt_login
-	authorized_staff_user = StaffUser.authenticate(params[:email], params[:password])
-	if authorized_staff_user
-		session[:staff_user_id] = authorized_staff_user.id
-		session[:email] = authorized_staff_user.email
-		agency_id = authorized_staff_user.agency_id
-		session[:agency_id] = agency_id
-		agency = Agency.where(:id => agency_id)
-		session[:agency_name] = agency.first.name
-		flash[:notice] = "You are now logged in."
-		redirect_to(:action => 'menu')
-	else
-		flash[:notice] = "Invalid email/password combination."
-		redirect_to(:action => 'login')
+	def index
+		menu
+		render('menu')
 	end
- end
+
+	def menu
+	end
+
+	def login
+		render layout: "staff_login"
+	end
   
-  def logout
-  		session[:staff_user_id] = nil
+	def attempt_login
+		authorized_staff_user = StaffUser.authenticate(params[:email], params[:password])
+		if authorized_staff_user
+			session[:staff_user_id] = authorized_staff_user.id
+			session[:email] = authorized_staff_user.email
+			agency_id = authorized_staff_user.agency_id
+			session[:agency_id] = agency_id
+			agency = Agency.where(:id => agency_id)
+			session[:agency_name] = agency.first.name
+			flash[:notice] = "You are now logged in."
+
+			redirect_to(:action => 'select_location')
+		else
+			flash[:notice] = "Invalid email/password combination."
+			redirect_to(:action => 'login')
+		end
+	end
+	
+	def select_location
+		@locations = Location.all.collect	
+		render layout: "staff_login"
+	end
+ 
+	def location_selected
+		session[:location_id] = params[:location_id]
+		location = Location.find(session[:location_id]) 
+		session[:location_name] = location.name
+		redirect_to(:action => 'menu')
+	end
+ 
+  
+	def logout
+		session[:staff_user_id] = nil
 		session[:agency_id] = nil
 		flash[:notice] = "You have been logged out."
 		redirect_to(:action => 'login')
-  end
+	end
   
 
   

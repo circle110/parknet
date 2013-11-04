@@ -1,0 +1,27 @@
+	<%= form_for @season_title, url: {action: "create"}, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		<table summary="Season Title fields">
+			<tr>
+				<th><%= f.label(:title) %></th>
+				<td><%= f.text_field(:title) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:active) %></th>
+				<td>
+				<% if @season_title.new_record? %>
+					<%= f.check_box(:active, :checked => true) %>
+					<% submit_text = "Create New Season Title" %>
+				<% else %>
+					<%= f.check_box(:active) %>
+					<% submit_text = "Post Season Title Edits" %>
+				<% end %>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit submit_text %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

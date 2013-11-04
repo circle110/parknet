@@ -1,0 +1,13 @@
+<%= link_to("Add New Membership Level Three", {:action => 'new'}, :class => 'back-link') %>
+
+<div class="membership levels">
+
+		<h3>Membership Level Three</h3>
+<ul>
+<% @membership_level_threes.each do |m| %>
+
+	<li><%=  %><%= link_to("#{m.name}", {:action => 'edit', :id => m.id}, :class => 'back-link') %></li>
+
+<% end %>
+</ul>
+</ div>	

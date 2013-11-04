@@ -1,0 +1,51 @@
+	<%= form_for @season, html: {class: "input_form"} do |f| %>
+		<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+		
+		<table summary="Season fields">
+			<tr>
+				<th><%= f.label(:season_year) %></th>
+				<td><%= f.text_field(:season_year) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:season_title) %></th>
+				<td><%= f.select(:season_title_id, SeasonTitle.all.collect {|s| [s.title, s.id]},{:include_blank => true}) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:default_registration_start_date) %></th>
+				<td><%= f.date_select(:default_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:default_nr_registration_start_date) %></th>
+				<td><%= f.date_select(:default_nr_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th><%= f.label(:default_internet_display_date) %></th>
+				<td><%= f.date_select(:default_internet_display_date, :order => [:month, :day, :year]) %></td>
+			</tr>		
+			<tr>
+				<th><%= f.label(:member_registration_start_date) %></th>
+				<td><%= f.date_select(:member_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>			
+			<tr>
+				<th><%= f.label(:registration_start_time) %></th>
+				<td><%= f.time_select(:registration_start_time, :minute_step => 15, :ampm => true) %></td>
+			</tr>			
+				<th><%= f.label(:active) %></th>
+				<td>
+				<% if @season.new_record? %>
+					<%= f.check_box(:active, :checked => true) %>
+					<% submit_text = "Create New Season" %>
+				<% else %>
+					<%= f.check_box(:active) %>
+					<% submit_text = "Post Season Edits" %>
+				<% end %>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><%= f.submit submit_text %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

@@ -4,7 +4,7 @@ class StaffUsersController < ApplicationController
 	
 	before_filter :confirm_logged_in
 
-	def list
+	def index
 		@staff_users = StaffUser.order("staff_users.last_name, staff_users.first_name ASC")
 	end
 	
@@ -19,7 +19,7 @@ class StaffUsersController < ApplicationController
 	def create
 		@staff_user = StaffUser.new(params[:staff_user])
 		if @staff_user.save
-			redirect_to(:action => 'list', :notice => "New Staff User Added")
+			redirect_to(:action => 'index', :notice => "New Staff User Added")
 		else
 			render('new')
 		end		
@@ -35,9 +35,10 @@ class StaffUsersController < ApplicationController
 	end
 	
 	def update
+		params[:staff_user][:staff_user_role_ids] ||= []
 		@staff_user = StaffUser.find(params[:id])
 		if @staff_user.update_attributes(params[:staff_user])
-			redirect_to(:action => 'list')
+			redirect_to(:action => 'index')
 		else
 			render('edit')
 		end	

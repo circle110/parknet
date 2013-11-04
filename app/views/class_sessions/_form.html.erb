@@ -1,0 +1,134 @@
+	<%= form_for @class_session, html: {class: "input_form"} do |f| %>
+		<table summary="Class Session fields" cellpadding="4">
+		<%= f.hidden_field(:agency_id) %>
+		<%= f.hidden_field(:program_id) %>
+		<% if @class_session.new_record? %>
+			<%= f.hidden_field(:season_id, :value => params[:season_id]) %>
+		<% end %>
+		<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+			<tr>
+				<th>Name</th>
+				<td><%= f.text_field(:name) %></td>
+			</tr>
+			<tr>
+				<th>Session Display Order</th>
+				<td><%= f.text_field(:session_display_order) %></td>
+			</tr>
+			<tr>
+				<th>Session Status Id</th>
+				<td><%= f.select(:session_status_id, [["Active", "a"], ["Inactive", "i"], ["Canceled", "c"]]) %></td>
+			</tr>
+			<tr>
+				<th>Facility</th>
+				<td><%= f.select(:facility_id, Facility.all.collect {|s| [s.name, s.id]},{:include_blank => "--Select Facility--"}) %></td>
+			</tr>
+			<tr>
+				<th>Start Date</th>
+				<td><%= f.date_select(:start_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>End Date</th>
+				<td><%= f.date_select(:end_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Start Time</th>
+				<td><%= f.time_select(:start_time, :minute_step => 15, :ampm => true) %></td>
+			</tr>
+			<tr>
+				<th>End Time</th>
+				<td><%= f.time_select(:end_time, :minute_step => 15, :ampm => true) %></td>
+			</tr>
+			<tr>
+				<th>Days of Week</th>
+				<td><%= f.check_box(:sunday, :checked_value => "1") %> Sunday
+					<%= f.check_box(:monday, :checked_value => "1") %> Monday
+					<%= f.check_box(:tuesday, :checked_value => "1") %> Tuesday
+					<%= f.check_box(:wednesday, :checked_value => "1") %> Wednesday
+					<%= f.check_box(:thursday, :checked_value => "1") %> Thursday
+					<%= f.check_box(:friday, :checked_value => "1") %> Friday
+					<%= f.check_box(:saturday, :checked_value => "1") %> Saturday				
+				</td>
+			</tr>
+			<tr>
+			<tr>
+				<th>Supervisor</th>
+				<td><%= f.select(:supervisor_id, StaffUser.all.collect {|s| [s.full_name_last_first, s.id]}, {:include_blank => "--Select Supervisor--"}) %></td>
+			</tr>
+			<tr>
+				<th>Minimum Registrants</th>
+				<td><%= f.text_field(:minimum_registrants) %></td>
+			</tr>
+			<tr>
+				<th>Maximum Registrants</th>
+				<td><%= f.text_field(:maximum_registrants) %></td>
+			</tr>
+			<tr>
+				<th>GL Account</th>
+				<td><%= f.select(:gl_account_id, GlAccount.where("agency_id = #{session[:agency_id]} AND account_type = 2").order("gl_account_number ASC").collect {|s| [s.number_name, s.id]}, {:include_blank => "--Select GL Account--"}) %></td>
+			</tr>
+			<tr>
+				<th>Deferred GL Account</th>
+				<td><%= f.select(:deferred_gl_account_id, GlAccount.where("agency_id = #{session[:agency_id]} AND account_type = 4").order("gl_account_number ASC").collect {|s| [s.number_name, s.id]}, {:include_blank => "--Select Deferred GL Account--"}) %></td>
+			</tr>
+			<tr>
+				<th>Registration Start Date</th>
+				<td><%= f.date_select(:registration_start_datetime, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Non-Resident Registration Start Date</th>
+				<td><%= f.date_select(:non_resident_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Member Registration Date</th>
+				<td><%= f.date_select(:member_registration_start_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Internet Display Date</th>
+				<td><%= f.date_select(:internet_display_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Internet Display Until Date</th>
+				<td><%= f.date_select(:internet_display_until_date, :order => [:month, :day, :year]) %></td>
+			</tr>
+			<tr>
+				<th>Alert Text</th>
+				<td><%= f.text_area(:alert_text, size: "60x4") %></td>
+			</tr>
+			<tr>
+				<th>Confirmation Text</th>
+				<td><%= f.text_area(:confirmation_text, size: "60x4") %></td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td><%= f.text_area(:description, size: "60x8") %></td>
+			</tr>
+			<% if !@class_session.new_record? %>
+				<tr>
+				<td>
+				<h4>Class Session Fees</h4>
+				</td>
+				<td><%= link_to("Add New Fee", {:action => 'new', :controller => 'class_session_fees', :account_id => session[:account_id], :agency_id => session[:agency_id], :class_session_id => @class_session.id}, 
+			:class => 'add-fee-link') %>
+				</td>
+				</tr>
+				<tr>
+				<td colspan="2">
+				<% if @fees.count > 0 %>
+					<% @fees.each do |f| %>
+						<%= link_to("#{f.name} - #{number_to_currency(f.amount)}", {:action => 'edit', :controller => 'class_session_fees', :id => f.id}, :class => 'edit-fee-link') %><br>
+					<% end %>
+				<% else %>
+					There are no fees defined yet for this class session. Click the link above to add fees.
+				<% end %>
+				</td>
+				</tr>
+			<% end %>
+			<tr>
+				<td colspan="2">
+				<% @class_session.new_record? ? submit_text = "Create New Class Session":submit_text = "Post Class Session Edits" %>
+				<%= f.submit submit_text %>
+				</td>
+			</tr>
+		</ table>
+
+	<% end %>

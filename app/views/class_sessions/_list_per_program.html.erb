@@ -18,7 +18,7 @@
 		<% @program.class_sessions.each do |session| %>
 			
 			<tr class="class sessions">
-				<td><%= session.session_display_order %></td>
+				<td><%= link_to("Edit", {:action => 'edit', :controller => 'class_sessions', :id => session.id}, :class => 'action_edit') %><%= session.session_display_order %></td>
 				<td><%= session.session_status_id %></td>
 				<td><%= session.name %></td>
 				<td><%= session.start_date %></td>
@@ -27,7 +27,7 @@
 				<td><%= session.end_time %></td>
 				<td><%= session.days_of_week %></td>
 				<td class="actions">
-				<%= link_to("Edit", {:action => 'edit', :controller => 'class_sessions', :id => session.id}, :class => 'action_edit') %>
+				
 				</td>
 			</tr>
 		<% end %>

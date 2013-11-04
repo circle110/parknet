@@ -1,7 +1,10 @@
 <%= link_to("<<Back to Maintain Account", {:action => 'edit', :controller => 'accounts', :id => @customer.account_id}, :class => 'back-link') %>
 
 <div class="customer update">
-	<h2>Update Customer</h2>
+	<h2>Update Customer <%= @customer.full_name %></h2>
+	<img src="/headshots_images/<%= @customer.headshot_photo %>" height="150" width="200">
+	<%= @customer.barcode_data(xdim:3, height:40).html_safe  %>
+	<%= link_to("Take Photo", {:action => 'index', :controller => 'headshots', :id => @customer.id}, :class => 'photo-link') %>
 	<%= form_for @customer, url: {action: "update"}, html: {class: "input_form"} do |f| %>
 	<%= f.hidden_field(:account_id) %>
 		<table summary="Customer fields">
@@ -16,7 +19,7 @@
 			<tr>
 				<th>Head of Household</th>
 				<td><%= f.check_box(:head_of_household_flag) %></td>
-			</tr>			
+			</tr>		
 			<tr>
 				<th>Email</th>
 				<td><%= f.text_field(:email) %></td>

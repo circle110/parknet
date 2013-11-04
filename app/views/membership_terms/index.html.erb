@@ -1,0 +1,14 @@
+
+<%= link_to("Add New Membership Term", {:action => 'new'}, :class => 'back-link') %>
+
+<div class="membership terms">
+
+		<h3>Membership Terms</h3>
+<ul>
+<% @membership_terms.each do |m| %>
+
+	<li><%=  %><%= link_to("#{m.name}", {:action => 'edit', :id => m.id}, :class => 'back-link') %></li>
+
+<% end %>
+</ul>
+</ div>	

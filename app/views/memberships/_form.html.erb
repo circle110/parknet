@@ -1,0 +1,55 @@
+<%= form_for @membership do |f| %>
+<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+<tr>
+	<td><%= f.label(:name) %></td>
+	<td><%= f.text_field(:name) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:membership_level_one_id) %></td>
+	<td><%= f.select(:membership_level_one_id, MembershipLevelOne.where("agency_id = #{session[:agency_id]}").collect {|s| [s.name, s.id]},{:include_blank => '--Select Level One Type--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:membership_level_two_id) %></td>
+	<td><%= f.select(:membership_level_two_id, MembershipLevelTwo.where("agency_id = #{session[:agency_id]}").collect {|s| [s.name, s.id]},{:include_blank => '--Select Level Two Type--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:membership_level_three_id) %></td>
+	<td><%= f.select(:membership_level_three_id, MembershipLevelThree.where("agency_id = #{session[:agency_id]}").collect {|s| [s.name, s.id]},{:include_blank => '--Select Level Three Type--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:membership_term_id) %></td>
+	<td><%= f.select(:membership_term_id, MembershipTerm.where("agency_id = #{session[:agency_id]}").collect {|s| [s.name, s.id]},{:include_blank => '--Select Membership Term--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:gl_account_id) %></td>
+	<td><%= f.select(:gl_account_id, GlAccount.where("agency_id = #{session[:agency_id]} AND account_type = 10").collect {|s| [s.number_name, s.id]},{:include_blank => '--Select GL Account--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:deferred_gl_account_id) %></td>
+	<td><%= f.select(:deferred_gl_account_id, GlAccount.where("agency_id = #{session[:agency_id]} AND account_type = 4").collect {|s| [s.number_name, s.id]},{:include_blank => '--Select Deferred Revenue GL Account--'}) %></td>
+</tr>
+<tr>
+	<td><%= f.label(:active) %></td>
+	<td>
+	<% if @membership.new_record? %>
+		<%= f.check_box(:active, :checked => true) %>
+		<% submit_text = "Create New Membership" %>
+	<% else %>
+		<%= f.check_box(:active) %>
+		<% submit_text = "Post Membership Edits" %>
+	<% end %>
+	</td>
+</tr>
+<tr>
+<td>
+  <%= f.fields_for :membership_fees do |builder| %>
+    <%= render "fee_fields", :f => builder %>
+  <% end %>
+</td>
+<tr>
+	<td colspan="2">
+	<%= f.submit submit_text %>
+	</td>
+</tr>
+<% end %>

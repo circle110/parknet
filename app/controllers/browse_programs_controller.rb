@@ -16,7 +16,7 @@ class BrowseProgramsController < ApplicationController
 		@program = ClassSession.where("program_id = ? AND season_id = ?", params[:id], agency.current_online_season_id)
 	end
   
-  def list
+  def index
 	if params[:kid]
 		#kid_birthdate = DateTime.new(params["kid"]["birthdate1(1i)"].to_i, 
 									#params["kid"]["birthdate1(2i)"].to_i,

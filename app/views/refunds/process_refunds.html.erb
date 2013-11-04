@@ -1,0 +1,34 @@
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @refund}) %>
+<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+
+<h4>Process Requested Refunds</h4>
+
+<h5>Requested Refunds</h5>
+<% if @requested.count > 0 %>
+	<%= form_tag '/refunds/refunds_processed' do %>
+		<%= hidden_field_tag(:agency_id, session[:agency_id]) %>
+		<%= hidden_field_tag(:creation_user_stamp, session[:staff_user_id]) %>
+		<%= hidden_field_tag(:user_stamp, session[:staff_user_id]) %>
+		
+		<% @requested.each do |r| %>
+			<% registration = Registration.find(r.reference_id) %>
+			<%#= hidden_field_tag("registration_id[]", registration.id) %>
+			<%= check_box_tag("refunds[]", r.id, true, :id => "refund_ids_#{r.id}") %> <%= registration.customer.first_name %> <%= registration.customer.last_name %> - <%= registration.class_session.program.name %> <%= registration.class_session.season.season_title.title %> <%= registration.class_session.season.season_year %> || 
+			<% payment_type = registration.payment_allocations.first.payment.payment_type_id %>
+			<% case payment_type 
+				 when 1 %>
+					<% payment_name = "Cash" %>
+				<% when 2 %>
+					<% payment_name = "Check" %>
+				<% when 3 %>
+					<% payment_name = "Credit Card" %>
+			<% end %>
+			Paid by: <%= payment_name %>
+			<br>
+		<% end %>
+		<br>
+		<%= submit_tag "Process Refunds" %>
+	<% end %>
+<% else %>
+Nothing is available for refunding at this time.
+<% end %>

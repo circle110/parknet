@@ -15,3 +15,5 @@
  .field_with_errors {
    color: red;
  }
+
+.hidden_at_load  { display: none; }

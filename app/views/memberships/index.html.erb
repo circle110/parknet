@@ -1,0 +1,19 @@
+
+<%= link_to("Add New Membership", {:action => 'new'}, :class => 'new-link') %>
+
+<div class="memberships">
+
+		<h3>Memberships</h3>
+<ul>
+<% @level_ones.each do |l| %>
+
+	<li><%= l.name %></li>
+	<ul>
+		<%# l.memberships.each do |m| %>
+		<% l.memberships.includes(:membership_level_two, :membership_level_three).order("membership_level_twos.name, membership_level_threes.name").each do |m| %>
+			<li><%= link_to("#{m.name}", {:action => 'edit', :id => m.id}, :class => 'edit-link') %></li>
+		<% end %>
+	</ul>
+<% end %>
+</ul>
+</ div>	

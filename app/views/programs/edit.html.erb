@@ -1,4 +1,4 @@
-<%= link_to("<<Back to Program List", {:action => 'list'}, :class => 'back-link') %>
+<%= link_to("<<Back to Program List", {:action => 'index'}, :class => 'back-link') %>
 
 <%= render(:partial => 'shared/error_messages', :locals => {:object => @program}) %>
 
@@ -9,7 +9,7 @@
 
 
 <%= form_tag(maintain_program_path, :method => 'post') do %>
-<%= hidden_field_tag 'id', "#{@program.id}" %>
+<%= hidden_field_tag 'id', @program.id %>
 <table summary="Class Sesssions" class="listing" cellpadding="4">
 	<tr>
 		<td colspan="3"><h2>Class Sessions</h2> 

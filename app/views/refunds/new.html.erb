@@ -1,12 +1,27 @@
+<%= link_to("<<Back to Registration", {:action => 'registration', :controller => 'staff_registration'}, :class => 'back-link') %>
+<%= render(:partial => 'shared/error_messages', :locals => {:object => @refund}) %>
+
 <h4>Request Refund for Account <%= @account.email %> || (<%= @account.home_area %>)<%= @account.home_phone[0..2] %>-<%= @account.home_phone[3..6] %></h4>
 Total Account Balance: <%= number_to_currency(@balance) %>
 <br>
 <h5>Items Available for Refunding</h5>
-<%= form_for @refund do |f| %>
+	
 	<% @withdrawals.each do |w| %>
-		<% registration = Registration.find(w.reference_id) %>
-		<%= w.customer.first_name %> <%= w.customer.last_name %> - <%= registration.class_session.program.name %> <%= registration.class_session.season.season_title.title %> <%= registration.class_session.season.season_year %> -- <%= number_to_currency(w.debit) %>
-		<% payment_type = registration.payment_allocations.first.payment.payment_type_id %>
+		<% accounting_transactions = AccountingTransaction.where("reference_id = ? OR reference_id in (SELECT id FROM `payment_allocations` where reference_id = ?)", w.id, w.id) %>
+		<% balance = 0 %>
+		<% accounting_transactions.each do |a| %>
+			<% case a.transaction_type_id 
+				when 1 %>
+				<% balance = balance - a.debit %>
+			<% when 2 %>
+				<% balance = balance + a.debit %>
+			<% when 3 %>
+				<% balance = balance + a.debit %>
+			<% end %>
+		<% end %>
+		<% refund_available = w.fee_amount - w.amount_refunded %>
+		<%= w.customer.first_name %> <%= w.customer.last_name %> - <%= w.class_session.program.name %> <%= w.class_session.season.season_title.title %> <%= w.class_session.season.season_year %>
+		<% payment_type = w.payment_allocations.first.payment.payment_type_id %>
 		<% case payment_type %>
 			<% when 1 %>
 				<% payment_name = "Cash" %>
@@ -15,11 +30,28 @@ Total Account Balance: <%= number_to_currency(@balance) %>
 			<% when 3 %>
 				<% payment_name = "Credit Card" %>
 		<% end %>
-		| Paid by: <%= payment_name %>
-		<br>Amount to be refunded:
-	<%= f.text_field(:amount, :value => w.debit) %>
-		
+		|| Paid by: <%= payment_name %> || Available to be refunded: <%= number_to_currency(balance) %>
+		<% @refund_requested = Refund.where("reference_id = ? AND status_id = 1", w.id) %>
+		<% if @refund_requested.count > 0 %>
+			<br>|| <i>Refund already requested but not yet processed.</i>|| <%= link_to("Unrequest Refund", {:action => 'unrequest', :id => @refund_requested.first.id}, :class => 'unrequest-link') %>
+			<br>
+			___________________________________________________________________________
+		<% else %>
+			<%= form_for @refund do |f| %>
+				<%= f.hidden_field(:agency_id, :value => session[:agency_id]) %>
+				<%= f.hidden_field(:reference_id, :value => w.id) %>
+				<%= f.hidden_field(:reference_type, :value => 'Registration') %>
+				<%= f.hidden_field(:status_id, :value => 1) %>
+				<%= f.hidden_field(:creation_user_stamp, :value => session[:staff_user_id]) %>
+				<%= f.hidden_field(:user_stamp, :value => session[:staff_user_id]) %>
+				<br>Amount to be refunded:
+				<%= f.text_field(:amount, :value => balance) %>
+					<%= f.submit "Request Refund" %>
+			<% end %>
+				___________________________________________________________________________________
+		<% end %>
+	
+		<br>
 	<% end %>
-<br>
-<%= f.submit "Request Refund" %>
-<% end %>
+	<br>
+

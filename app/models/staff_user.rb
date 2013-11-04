@@ -1,6 +1,8 @@
 class StaffUser < ActiveRecord::Base
 	belongs_to :agency
 	has_many :staff_supervisors
+	has_and_belongs_to_many :staff_user_roles
+	has_many :payments 
 	
 	attr_accessor :password
 	
@@ -21,6 +23,11 @@ class StaffUser < ActiveRecord::Base
 	
 	
 	attr_accessible :agency_id, :first_name, :last_name, :email, :security_group, :is_supervisor, :user_stamp, :password, :password_confirmation
+	attr_accessible :staff_user_role_ids
+	
+	def has_role?(role_sym)
+		staff_user_roles.any? { |r| r.name.parameterize.underscore.to_sym == role_sym }
+	end
 	
 	def full_name_last_first
 		"#{last_name}, #{first_name}"

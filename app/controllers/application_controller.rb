@@ -38,6 +38,13 @@ class ApplicationController < ActionController::Base
 		@current_agency ||= Agency.find(session[:agency_id])
 	end
 	
+	def current_user
+		current_user ||= StaffUser.find(session[:staff_user_id])
+	end
+	
+	rescue_from CanCan::AccessDenied do |exception|
+		redirect_to :back, :alert => 'You do not have sufficient rights for that action.'
+	end
   
     def find_program
 		search_text = params[:search_text]
@@ -67,6 +74,11 @@ class ApplicationController < ActionController::Base
 			end
 			@customers = current_agency.customers.includes(:account).where("customers.last_name like ? OR accounts.home_phone = ?", "%#{last_name}%", phone).order("account_id", "last_name", "first_name")
 		end	
+	end
+	
+	def headshot_custom_file_path
+		file_name = "headshot_capture_#{rand(10000)}_#{Time.now.to_i}.jpg"
+		File.join(Rails.root, 'public', 'headshots_images', file_name)
 	end
   
 end

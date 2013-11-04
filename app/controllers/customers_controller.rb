@@ -44,10 +44,11 @@ class CustomersController < ApplicationController
 	def update
 		@customer = Customer.find(params[:id])
 		if @customer.update_attributes(params[:customer])
-			redirect_to(:action => 'edit', :controller => 'accounts', :id => params[:customer][:account_id])
+			redirect_to(:action => 'edit', :controller => 'accounts', :id => @customer.account_id)
 		else
 			render('edit')
 		end	
 	end	
+	
 	
 end

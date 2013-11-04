@@ -1,0 +1,38 @@
+<div class="show registrations">
+<%= link_to("<<Back to Membership Management", {:action => 'memberships', :controller => 'staff_membership_sales', :id => @customer.account_id}, :class => 'back-link') %>
+
+
+
+
+<h4>Memberships for <%= @customer.full_name %></h4>
+<% if @memberships.first.try(:id) %>
+	<ul>
+	<% @memberships.each do |m| %>
+		<% if m.status_id == "e" %>
+			<% initial_verbage = "Expired -- " %>
+		<% end %>
+		<% if m.status_id == "w" %>
+			<% initial_verbage = "WITHDRAWN -- " %>
+		<% end %>
+		<li><%= initial_verbage %><%= m.membership.name %> | <%= m.start_date.strftime("%a, %b %d, %Y") %> | 
+		<%= m.expiry_date.strftime("%a, %b %d, %Y") %> | 
+		<% if m.status_id == "w" %>
+			Already Withdrawn from Membership |
+		<% elsif m.status_id == "w" %>
+			Membership has expired |
+		<% else %>
+			<%= link_to("Withdraw", {:action => 'withdraw', :controller => 'staff_membership_sales', :membership_id => m.id, :customer_id => @customer.id, 
+		 :status_id => m.status_id}, :class => 'back-link') %> |
+		<% end %>
+		</li> 
+
+	<% end %>
+	</ul>
+<% else %>
+
+<%= @customer.full_name %> has no current or past memberships.
+
+<% end %>
+
+</div>
+	

@@ -1,0 +1,2 @@
+class MembershipFeesController < ApplicationController
+end

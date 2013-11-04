@@ -1,34 +1,44 @@
 <div class="account list">
 <h4>Accounting History for (<%= @account.home_area %>) <%= @account.home_phone[0..2] %>-<%= @account.home_phone[3..6] %> -- <%= @account.email %></h4>
 
-<% if params[:from] == 'registration' %>
-	<%= link_to("Back to Registration Session", :action => 'registration', :controller => 'staff_registration', :class => 'action new') %>
+<% case params[:from] 
+	   when 'registration' %>
+		<%= link_to("Back to Registration Session", :action => 'registration', :controller => 'staff_registration', :class => 'backlink') %>
+	<% when 'memberships' %>
+		<%= link_to("Back to Membership Management", :action => 'memberships', :controller => 'staff_membership_sales', :class => 'backlink') %>
 <% else %>
-	<%= link_to("Back to Maintain Account", :action => 'edit', :controller => 'accounts', :id => @history.first.customer_account_id, :class => 'action new') %>
+	<%= link_to("Back to Maintain Account", :action => 'edit', :controller => 'accounts', :id => @account.id, :class => 'backlink') %>
 <% end %>
 
-<% if @history.count > 0 %>
-<table summary="Account" class="listing" cellpadding="5">
-	<tr>
-		<th>Date</th>
-		<th>Transaction Type</th>
-		<th>Transaction Details</th>
-		<th>Amount</th>
-		<th>Balance</th>
-	</tr>
+
+<% if @history %>
+	<table summary="Account" class="listing" cellpadding="5">
+		<tr>
+			<th>Date</th>
+			<th>Transaction Type</th>
+			<th>Transaction Details</th>
+			<th>Amount</th>
+			<th>Balance</th>
+		</tr>
 	<% balance = 0 %>
+	<% old_transaction_id = 0 %>
+	<% old_transaction_type = 0 %>
+	<% last_row = [] %>
 	<% @history.each do |history| %>
+		<% new_transaction_id = history.reference_id %>
 		<% case history.transaction_type_id %>
 		<% when 1 %>
+			<%# Registration %>
 			<% registration = Registration.find(history.reference_id) %>
 			<% transaction_type = "Program Registration" %>
-			<% details = registration.customer.first_name + " " + registration.customer.last_name + ", " %>
-			<% details += registration.class_session.program.name + " - " %>
+			<% details = "#" + registration.id.to_s + " - " + registration.customer.first_name + " " + registration.customer.last_name + ", " %>
+			<% details += registration.class_session.program.name + " - "  +  registration.class_session.session_display_order.to_s + ", " %>
 			<% details += registration.class_session.season.season_title.title + "-" %>
 			<% details += registration.class_session.season.season_year %>
-			<% amount = history.credit %>
+			<% amount = history.credit_sum %>
 			<% balance -= amount %>
 		<% when 2 %>
+			<%# Payment %>
 			<% allocation = PaymentAllocation.find(history.reference_id) %>	
 			<% transaction_type = "Payment Made" %>
 			<% case allocation.payment.payment_type_id %>
@@ -38,22 +48,66 @@
 					<%# details = "Check #" + allocation.payment.check_number + " applied to " + allocation.registration.class_session.program.name %>
 					<% details = "Check #" + allocation.payment.check_number %>
 				<% when 3 %>
-					<% details = "Credit card" %>
+					<% details = "Credit card - ####-" + allocation.payment.last_4 %>
 			<% end %>
-			<% amount = history.debit %>
+			<% amount = history.credit_sum %>
 			<% balance += amount %>
 		<% when 3 %>
+			<%# Withdrawal %>
 			<% registration = Registration.find(history.reference_id) %>
 			<% transaction_type = "Withdraw from Program" %>
-			<% details = registration.customer.first_name + " " + registration.customer.last_name + ", " %>
+			<% details = "#" + registration.id.to_s + " - " + registration.customer.full_name + ", " %>
 			<% details += registration.class_session.program.name + " - " %>
+			<% details += registration.class_session.season.season_title.title + "-" + registration.class_session.session_display_order.to_s + ", " %>
+			<% details += registration.class_session.season.season_year %>
+			<% amount = history.credit_sum %>
+			<% balance += amount %>
+		<% when 4 %>
+			<%# Refund Request %>
+			<% refund = Refund.find(history.reference_id) %>
+			<% registration = Registration.find(refund.reference_id) %>
+			<% transaction_type = "Refund Requested" %>
+			<% details = "#" + registration.id.to_s + " - " + registration.customer.full_name + ", " %>
+			<% details += registration.class_session.program.name + " - " + registration.class_session.session_display_order.to_s + ", " %>
 			<% details += registration.class_session.season.season_title.title + "-" %>
 			<% details += registration.class_session.season.season_year %>
-			<% amount = history.credit %>
+			<% amount = history.credit_sum %>
+			<% balance -= amount %>
+		<% when 5 %>
+			<%# Refund Processed %>
+		<% when 6 %>
+			<%# Membership Sale %>
+			<% membership = MembershipSale.find(history.reference_id) %>
+			<% transaction_type = "Membership Pass Purchased" %>
+			<% details = membership.customer.full_name + ", " %>
+			<% details += membership.membership.name + " - " %>
+			<% amount = history.credit_sum %>
+			<% balance -= amount %>	
+		<% when 7 %>
+			<%# Refund Unrequested %>
+			<% refund = Refund.find(history.reference_id) %>
+			<% registration = Registration.find(refund.reference_id) %>
+			<% transaction_type = "Refund Unrequested" %>
+			<% details = "#" + registration.id.to_s + " - " + registration.customer.full_name + ", " %>
+			<% details += registration.class_session.program.name + " - " + registration.class_session.session_display_order.to_s + ", " %>
+			<% details += registration.class_session.season.season_title.title + "-" %>
+			<% details += registration.class_session.season.season_year %>
+			<% amount = history.credit_sum %>
 			<% balance += amount %>
+		<% when 8 %>
+			<%# Withdrawal Fee %>
+			<% registration = Registration.find(history.reference_id) %>
+			<% transaction_type = "Withdrawal Fee Charged" %>
+			<% details = "#" + registration.id.to_s + " - " + registration.customer.full_name + ", " %>
+			<% details += registration.class_session.program.name + " - " + registration.class_session.session_display_order.to_s + ", " %>
+			<% details += registration.class_session.season.season_title.title + "-" %>
+			<% details += registration.class_session.season.season_year %>
+			<% amount = history.credit_sum %>
+			<% balance -= amount %>
+		<% when 9 %>
 		<% else %>
-		
 		<% end %>
+
 			<tr class="history-event">
 				<td><%= history.created_at.strftime("%b %d %I:%M %p") %></td>
 				<td><%= transaction_type %></td>
@@ -67,7 +121,9 @@
 				<% end %>
 				</td>
 			</tr>
+
 	<% end %>
+	
 </table>
 <% else %>
 	<p>No accounting history found.
